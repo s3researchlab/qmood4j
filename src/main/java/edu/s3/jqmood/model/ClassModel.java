@@ -12,7 +12,7 @@ public class ClassModel {
 
     private ClassOrInterfaceDeclaration classDeclaration;
 
-    private List<FieldDeclaration> fields;
+//    private List<FieldDeclaration> fields;
 
     private List<VariableModel> fieldModels = new ArrayList<>();
 
@@ -26,7 +26,6 @@ public class ClassModel {
 
         this.classDeclaration = classDeclaration;
 
-        this.fields = classDeclaration.getFields();
         this.methods = classDeclaration.getMethods();
         this.constructors = classDeclaration.getConstructors();
 
@@ -55,16 +54,8 @@ public class ClassModel {
         return this.methods.size();
     }
 
-    public int getNumberOfFields() {
-        return this.fields.size();
-    }
-
     public List<MethodDeclaration> getMethods() {
         return this.methods;
-    }
-
-    public List<FieldDeclaration> getFields() {
-        return this.fields;
     }
 
     public List<VariableModel> getFieldModels() {

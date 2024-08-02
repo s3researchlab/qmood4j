@@ -1,10 +1,9 @@
 package edu.s3.jqmood.calculator.metrics.design;
 
-import com.github.javaparser.ast.body.FieldDeclaration;
-
 import edu.s3.jqmood.calculator.metrics.MetricProperty;
 import edu.s3.jqmood.model.ClassModel;
 import edu.s3.jqmood.model.ProjectModel;
+import edu.s3.jqmood.model.VariableModel;
 
 /**
  * Data Access Metrics (DAM)
@@ -24,11 +23,11 @@ public class DataAccessMetrics extends DesignMetric {
 
         double numberOfNonPublicFields = 0;
 
-        if (cm.getNumberOfFields() == 0) {
+        if (cm.getFieldModels().size() == 0) {
             return 0.0;
         }
 
-        for (FieldDeclaration fd : cm.getFields()) {
+        for (VariableModel fd : cm.getFieldModels()) {
 
             if (fd.isPublic()) {
                 continue;
@@ -37,6 +36,6 @@ public class DataAccessMetrics extends DesignMetric {
             numberOfNonPublicFields++;
         }
 
-        return numberOfNonPublicFields / (double) cm.getNumberOfFields();
+        return numberOfNonPublicFields / (double) cm.getFieldModels().size();
     }
 }

@@ -24,92 +24,95 @@ import edu.s3.jqmood.utils.FileUtils;
 
 public class SourceCodeParser {
 
-    private static Logger logger = LogManager.getLogger(SourceCodeParser.class);
+	private static Logger logger = LogManager.getLogger(SourceCodeParser.class);
 
-    private List<Path> libraries = new ArrayList<>();
+	private List<Path> libraries = new ArrayList<>();
 
-    private List<String> ignoredPatterns = new ArrayList<>();
+	private List<String> ignoredPatterns = new ArrayList<>();
 
-    public void addLibraries(Path library) {
-        this.libraries.add(library);
-    }
+	public void addLibraries(Path library) {
+		this.libraries.add(library);
+	}
 
-    public void addIgnoredPattern(String pattern) {
-        this.ignoredPatterns.add(pattern);
-    }
+	public void addIgnoredPattern(String pattern) {
+		this.ignoredPatterns.add(pattern);
+	}
 
-    public ProjectModel parse(Path folder) throws IOException {
+	public ProjectModel parse(Path folder) throws IOException {
 
-        logger.info("Getting all files from {}", folder);
-        
-        StaticJavaParser.getParserConfiguration().setCharacterEncoding(StandardCharsets.UTF_8);
-        StaticJavaParser.getParserConfiguration().setSymbolResolver(getSymbolSolver());
+		StaticJavaParser.getParserConfiguration().setCharacterEncoding(StandardCharsets.UTF_8);
+		StaticJavaParser.getParserConfiguration().setSymbolResolver(getSymbolResolver());
 
-        for(Path library : libraries) {
-            logger.info("Library {}", library);
-        }
-        
-        List<Path> files = FileUtils.getFilesFromFolder(folder, ignoredPatterns, ".java");
+		logger.info("Done. Getting all java files from {}", folder);
 
-        logger.info("Found {} java files", files.size());
+		List<Path> files = FileUtils.getFilesFromFolder(folder, ignoredPatterns, ".java");
 
-        ProjectModel pm = new ProjectModel();
+		logger.info("Done. Found {} java files", files.size());
 
-        for (int i = 0; i < files.size(); i++) {
+		ProjectModel pm = new ProjectModel();
 
-            Path file = files.get(i);
+		for (int i = 0; i < files.size(); i++) {
 
-            logger.info("Parsing ({}/{}) {}", i + 1, files.size(), file);
+			Path file = files.get(i);
 
-            CompilationUnit cu = StaticJavaParser.parse(file);
+			logger.info("Parsing ({}/{}) {}", i + 1, files.size(), file);
 
-            cu.accept(new VoidVisitorAdapter<Void>() {
+			CompilationUnit cu = StaticJavaParser.parse(file);
 
-                @Override
-                public void visit(ClassOrInterfaceDeclaration clsDecl, Void v) {
+			cu.accept(new VoidVisitorAdapter<Void>() {
 
-                    pm.addClassModel(clsDecl);
+				@Override
+				public void visit(ClassOrInterfaceDeclaration clsDecl, Void v) {
 
-                    super.visit(clsDecl, null);
-                }
+					pm.addClassModel(clsDecl);
 
-            }, null);
+					super.visit(clsDecl, null);
+				}
 
-        }
+			}, null);
 
-        logger.info("Parsing Completed. Found {} classes and {} interfaces", pm.getNumberOfClasses(), pm.getNumberOfInterfaces());
+		}
 
-        return pm;
-    }
+		logger.info("Parsing Completed. Found {} classes and {} interfaces", pm.getNumberOfClasses(),
+				pm.getNumberOfInterfaces());
 
-    /**
-     * It returns a combined type solver by taking into account new libraries (it
-     * could could be folders with source codes or third-party .jar libraries)
-     *
-     * @param libraries should not be null
-     * @return a combined type solver with folders and jar libraries
-     * @throws IOException some I/O errors happen
-     */
-    public static CombinedTypeSolver getCombinedTypeSolver(List<Path> libraries) throws IOException {
+		return pm;
+	}
 
-        CombinedTypeSolver combinedTypeSolver = new CombinedTypeSolver();
+	/**
+	 * It returns a combined type solver by taking into account new libraries (it
+	 * could could be folders with source codes or third-party .jar libraries)
+	 *
+	 * @param libraries should not be null
+	 * @return a combined type solver with folders and jar libraries
+	 * @throws IOException some I/O errors happen
+	 */
+	public static CombinedTypeSolver getCombinedTypeSolver(List<Path> libraries) throws IOException {
 
-        combinedTypeSolver.add(new ReflectionTypeSolver());
+		CombinedTypeSolver combinedTypeSolver = new CombinedTypeSolver();
 
-        for (Path library : libraries) {
+		combinedTypeSolver.add(new ReflectionTypeSolver());
 
-            if (library.toString().endsWith(".jar")) {
-                combinedTypeSolver.add(new JarTypeSolver(library));
-            } else {
-                combinedTypeSolver.add(new JavaParserTypeSolver(library));
-            }
-        }
+		logger.info("Setting up {} symbol resolvers", libraries.size());
 
-        return combinedTypeSolver;
-    }
+		for (int i = 0; i < libraries.size(); i++) {
+			
+			Path library = libraries.get(i);
+		
+			logger.info("Adding Symbol Resolver ({}/{}): {}", i + 1, libraries.size(), library);
 
-    public JavaSymbolSolver getSymbolSolver() throws IOException {
-        return new JavaSymbolSolver(getCombinedTypeSolver(libraries));
-    }
+			if (library.toString().endsWith(".jar")) {
+				combinedTypeSolver.add(new JarTypeSolver(library));
+			} else {
+				combinedTypeSolver.add(new JavaParserTypeSolver(library));
+			}
+		}
+
+		return combinedTypeSolver;
+	}
+
+	public JavaSymbolSolver getSymbolResolver() throws IOException {
+		return new JavaSymbolSolver(getCombinedTypeSolver(libraries));
+	}
 
 }
