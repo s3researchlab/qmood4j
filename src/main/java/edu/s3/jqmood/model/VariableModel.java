@@ -3,90 +3,73 @@ package edu.s3.jqmood.model;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.resolution.types.ResolvedType;
-import com.github.javaparser.resolution.types.ResolvedTypeVariable;
 
 import edu.s3.jqmood.parser.UnResolvedType;
 import edu.s3.jqmood.utils.JavaParserUtils;
 
 public class VariableModel {
 
-	private FieldDeclaration fd;
+    private FieldDeclaration fd;
 
-	private ResolvedType type;
+    private ResolvedType type;
 
-	private String fullTypeName;
+    private String fullTypeName;
 
-	public VariableModel(ResolvedType type) {
+    public VariableModel(ResolvedType type) {
 
-		this.type = type;
+        this.type = type;
 
-		System.out.println("VariableModel " + type);
+        if (type.isReferenceType()) {
+            this.fullTypeName = type.asReferenceType().getQualifiedName();
+        } else if (type.isPrimitive()) {
+            this.fullTypeName = type.asPrimitive().describe();
+        } else if (type.isTypeVariable()) {
+            this.fullTypeName = JavaParserUtils.getQualifiedName(type.asTypeVariable());
+        } else if (type.isArray()) {
+            this.fullTypeName = type.asArrayType().describe();
+        } else if (type instanceof UnResolvedType) {
+            this.fullTypeName = "jqmood.unresolved." + ((UnResolvedType) type).qualifiedName();
+        } else {
+            throw new RuntimeException("Type not resolved");
+        }
+    }
 
-		if (type.isReferenceType()) {
-			this.fullTypeName = type.asReferenceType().getQualifiedName();
-		} else if (type.isPrimitive()) {
-			this.fullTypeName = type.asPrimitive().describe();
-		} else if (type.isTypeVariable()) {
-			this.fullTypeName = getQualifiedName(type.asTypeVariable());
-		} else if (type.isArray()) {
-			this.fullTypeName = type.asArrayType().describe();
-		} else if (type instanceof UnResolvedType) {
-			this.fullTypeName = "jqmood.unresolved." + ((UnResolvedType) type).qualifiedName();
-		} else {
-			throw new RuntimeException("Type not resolved");
-		}
+    public boolean isPublic() {
+        return this.fd.isPublic();
+    }
 
-		System.out.println(this.fullTypeName);
-	}
+    public VariableModel(FieldDeclaration fd) {
+        this(JavaParserUtils.resolve(fd));
 
-	public boolean isPublic() {
-		return this.fd.isPublic();
-	}
+        this.fd = fd;
+    }
 
-	public VariableModel(FieldDeclaration fd) {
-		this(JavaParserUtils.resolve(fd));
+    public VariableModel(Parameter parameter) {
+        this(JavaParserUtils.resolve(parameter));
+    }
 
-		this.fd = fd;
-	}
+    public String getFullTypeName() {
+        return this.fullTypeName;
+    }
 
-	public VariableModel(Parameter parameter) {
-		this(JavaParserUtils.resolve(parameter));
-	}
+    public boolean isPrimitive() {
+        return this.type.isPrimitive();
+    }
 
-	public String getFullTypeName() {
-		return this.fullTypeName;
-	}
+    public boolean isStandardJavaLibrary() {
+        return JavaParserUtils.isStandardJavaLibrary(fullTypeName);
+    }
 
-	public boolean isPrimitive() {
-		return this.type.isPrimitive();
-	}
+    public boolean isUserDefinedClass() {
 
-	public boolean isStandardJavaLibrary() {
-		return JavaParserUtils.isStandardJavaLibrary(fullTypeName);
-	}
+        if (isPrimitive()) {
+            return false;
+        }
 
-	public boolean isUserDefinedClass() {
+        if (isStandardJavaLibrary()) {
+            return false;
+        }
 
-		if (isPrimitive()) {
-			return false;
-		}
-
-		if (isStandardJavaLibrary()) {
-			return false;
-		}
-
-		return true;
-	}
-
-	private String getQualifiedName(ResolvedTypeVariable resolved) {
-		
-//		System.out.println(resolved.isArray());
-//		System.out.println(resolved.isInferenceVariable());
-//		System.out.println(resolved.isNumericType());
-//		System.out.println(resolved.isUnionType());
-//		System.out.println(resolved.isWildcard());
-//		System.out.println("<<<<<"+resolved.erasure());
-		return resolved.qualifiedName();
-	}
-
+        return true;
+    }
 }

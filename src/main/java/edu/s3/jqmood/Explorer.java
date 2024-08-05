@@ -2,35 +2,17 @@ package edu.s3.jqmood;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.AbstractMap.SimpleEntry;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
-import edu.s3.jqmood.calculator.MetricValues;
-import edu.s3.jqmood.calculator.MetricsCalculator;
-import edu.s3.jqmood.calculator.QMOODCalculator;
-import edu.s3.jqmood.calculator.metrics.design.AverageNumberOfAncestors;
-import edu.s3.jqmood.calculator.metrics.design.ClassInterfaceSize;
-import edu.s3.jqmood.calculator.metrics.design.CohesionAmongMethodsOfClass;
-import edu.s3.jqmood.calculator.metrics.design.DataAccessMetrics;
-import edu.s3.jqmood.calculator.metrics.design.DesignSizeInClasses;
-import edu.s3.jqmood.calculator.metrics.design.DirectClassCoupling;
-import edu.s3.jqmood.calculator.metrics.design.MeasureOfAggregation;
-import edu.s3.jqmood.calculator.metrics.design.MeasureOfFunctionalAbstraction;
-import edu.s3.jqmood.calculator.metrics.design.NumberOfHierarchies;
-import edu.s3.jqmood.calculator.metrics.design.NumberOfMethods;
-import edu.s3.jqmood.calculator.metrics.design.NumberOfPolymorphicMethods;
-import edu.s3.jqmood.calculator.metrics.quality.Effectiveness;
-import edu.s3.jqmood.calculator.metrics.quality.Extendibility;
-import edu.s3.jqmood.calculator.metrics.quality.Flexibility;
-import edu.s3.jqmood.calculator.metrics.quality.Functionality;
-import edu.s3.jqmood.calculator.metrics.quality.Reusability;
-import edu.s3.jqmood.calculator.metrics.quality.Understandability;
 import edu.s3.jqmood.model.ProjectModel;
-import edu.s3.jqmood.parser.SourceCodeParser;
-import edu.s3.jqmood.utils.MavenUtils;
+import edu.s3.jqmood.parser.CodeLoader;
+import edu.s3.jqmood.parser.CodeParser;
 
 public class Explorer {
 
@@ -40,35 +22,65 @@ public class Explorer {
 
         Configurator.setRootLevel(Level.DEBUG);
 
-        Path folder = Path.of("/Users/thiagodnf/Workspace/toy");
+//        Path folder = Path.of("/Users/thiagodnf/Workspace/grammatical-evolution");
+//        Path folder = Path.of("/Users/thiagodnf/Workspace/jedit");
+//        Path folder = Path.of("/Users/thiagodnf/Workspace/toy");
+//        Path folder = Path.of("/Users/thiagodnf/Workspace/jhotdraw-10.1");
+        Path folder = Path.of("/Users/thiagodnf/Workspace/guava-33.2.1");
+//        Path folder = Path.of("/Users/thiagodnf/Workspace/gson");
+//        Path folder = Path.of("/Users/thiagodnf/Workspace/jackrabbit");
+//        Path folder = Path.of("/Users/thiagodnf/Workspace/nautilus-framework");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/hangman-in-javafx");
 
-        SourceCodeParser parser = new SourceCodeParser();
+//        Path folder = Path.of("/Users/thiagodnf/Workspace/toy");
 
-        parser.addIgnoredPattern(".*test.*");
-        parser.addIgnoredPattern(".*target.*");
-        parser.addIgnoredPattern(".*module-info.java");
-        parser.addIgnoredPattern(".*package-info.java");
-        parser.addIgnoredPattern(".*Explorer.java");
+        logger.info("Folder: {}", folder);
 
-        parser.addLibraries(folder.resolve("src/main/java"));
+        CodeLoader loader = new CodeLoader();
 
-        for (Path dependency : MavenUtils.getJarFilePathsFromPomFile(folder)) {
-            parser.addLibraries(dependency);
-        }
+        loader.addIgnoredPattern(".*/src/test/java/.*");
+        loader.addIgnoredPattern(".*Test.java");
+        
+        loader.addIgnoredPattern(".*/guava-gwt/.*");
+        loader.addIgnoredPattern(".*/android/.*");
+        loader.addIgnoredPattern(".*/guava-testlib/.*");
+        loader.addIgnoredPattern(".*/guava-tests/.*");
 
-        ProjectModel pm = parser.parse(folder);
+        List<Path> fi = loader.loadFile(folder);
 
-        QMOODCalculator calculator = new QMOODCalculator();
+        System.out.println("files");
+        fi.stream().forEach(System.out::println);
+//        
+//        loader.addIgnoredPattern(".*/target/.*");
 
-        MetricValues values = calculator.calculate(pm);
+//        SimpleEntry<List<Path>, List<Path>> output = loader.load(folder);
 
-        values.forEach((key, value) -> {
+//        \h(System.out::println);
 
-            logger.info(key + " = " + value);
-        });
+//        System.out.println(DependencyLoader.load(files));
 
-        logger.info("Done.");
+//        CodeParser parser = new CodeParser();
+
+//        System.out.println(DependencyLoader.load(folder));
+//
+//        parser.addLibraries(folder.resolve("src/main/java"));
+//
+//        for (Path dependency : MavenUtils.getJarFilePathsFromPomFile(folder)) {
+//            parser.addLibraries(dependency);
+//        }
+//
+//        ProjectModel pm = parser.parse(files);
+//
+//        QMOODCalculator calculator = new QMOODCalculator();
+//
+//        MetricValues values = calculator.calculate(pm);
+//
+//        values.forEach((key, value) -> {
+//
+//            logger.info(key + " = " + value);
+//        });
+//
+//        logger.info("Done.");
     }
 
 }

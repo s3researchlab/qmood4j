@@ -12,8 +12,6 @@ public class ClassModel {
 
     private ClassOrInterfaceDeclaration classDeclaration;
 
-//    private List<FieldDeclaration> fields;
-
     private List<VariableModel> fieldModels = new ArrayList<>();
 
     private List<MethodDeclaration> methods;

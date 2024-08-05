@@ -19,13 +19,9 @@ public class NumberOfPolymorphicMethods extends DesignMetric {
     public MetricProperty getProperty() {
         return MetricProperty.POLYMORPHISM;
     }
-    
+
     @Override
     public double calculate(ProjectModel pm, ClassModel cm) {
-
-        if (cm.isInterface()) {
-            return 0.0;
-        }
 
         double total = 0.0;
 

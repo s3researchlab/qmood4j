@@ -23,9 +23,7 @@ public class AverageNumberOfAncestors extends DesignMetric {
     public double calculate(ProjectModel pm, ClassModel cm) {
 
         Set<String> superClasses = pm.getSuperClasses(cm.getFullClassName());
-        
-        System.out.println(cm.getFullClassName()+" "+superClasses);
-
+       
         return (double) superClasses.size();
     }
 }

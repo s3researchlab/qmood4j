@@ -21,7 +21,7 @@ public class DirectClassCoupling extends DesignMetric {
     public MetricProperty getProperty() {
         return MetricProperty.COUPLING;
     }
-    
+
     @Override
     public double calculate(ProjectModel pm, ClassModel cm) {
 

@@ -21,7 +21,7 @@ public class CohesionAmongMethodsOfClass extends DesignMetric {
     public MetricProperty getProperty() {
         return MetricProperty.COHESION;
     }
-    
+
     @Override
     public double calculate(ProjectModel pm, ClassModel cm) {
 
@@ -30,7 +30,10 @@ public class CohesionAmongMethodsOfClass extends DesignMetric {
         for (MethodModel method : cm.getMethodModels()) {
 
             for (VariableModel parameter : method.getParameters()) {
-                allTypes.add(parameter.getFullTypeName());
+
+                if (parameter.isUserDefinedClass()) {
+                    allTypes.add(parameter.getFullTypeName());
+                }
             }
         }
 
@@ -38,17 +41,22 @@ public class CohesionAmongMethodsOfClass extends DesignMetric {
 
         for (MethodModel method : cm.getMethodModels()) {
 
-            double intersection = 0.0;
+            Set<String> types = new HashSet<>();
 
             for (VariableModel parameter : method.getParameters()) {
 
-                if (allTypes.contains(parameter.getFullTypeName())) {
-                    intersection++;
+                if (parameter.isUserDefinedClass()) {
+
+                    if (allTypes.contains(parameter.getFullTypeName())) {
+                        types.add(parameter.getFullTypeName());
+                    }
                 }
             }
 
-            sumIntersection += intersection;
+            sumIntersection += types.size();
         }
+
+        System.out.println(cm.getFullClassName() + " -> " + sumIntersection);
 
         return sumIntersection;
     }

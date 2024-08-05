@@ -35,7 +35,7 @@ public class MavenUtils {
 
         String version = dependency.getVersion();
 
-        if (version.startsWith("$")) {
+        if (version != null && version.startsWith("$")) {
 
             final Matcher matcher = Pattern.compile("^\\$\\{(.*)\\}$").matcher(version);
 
@@ -79,7 +79,7 @@ public class MavenUtils {
 //        return Path.of(concatenated);
     }
 
-    private static Model readPomFile(Path pomFile) {
+    public static Model readPomFile(Path pomFile) {
 
         checkNotNull(pomFile);
         checkArgument(Files.exists(pomFile), pomFile + " not found");
@@ -87,7 +87,12 @@ public class MavenUtils {
         MavenXpp3Reader reader = new MavenXpp3Reader();
 
         try {
-            return reader.read(new FileReader(pomFile.toFile()));
+
+            Model model = reader.read(new FileReader(pomFile.toFile()));
+
+            model.setPomFile(pomFile.toFile());
+
+            return model;
         } catch (IOException | XmlPullParserException e) {
             throw new RuntimeException(e);
         }
@@ -97,7 +102,10 @@ public class MavenUtils {
 
         checkArgument(Files.exists(folder), folder + " not found");
 
-        String[] args = new String[] { "/opt/homebrew/bin/mvn", "-f", folder.toString(), "dependency:resolve" };
+//        String[] args = new String[] { "/opt/homebrew/bin/mvn", "-f", folder.toString(), "dependency:resolve" };
+        
+        String[] args = new String[] { "/opt/homebrew/bin/mvn", "-f", folder.toString(), "dependency:copy-dependencies" };
+
 
         try {
             ProcessBuilder builder = new ProcessBuilder(args).inheritIO();
@@ -114,20 +122,46 @@ public class MavenUtils {
 
         Model model = readPomFile(folder.resolve("pom.xml"));
 
-        List<Path> jarFiles = new ArrayList<>();
+        return getJarFilePathsFromPomFile(model);
+    }
+
+    public static List<Path> getJarFilePathsFromPomFile(Model model) {
+
+        List<Path> output = new ArrayList<>();
+
+//        if (isDownloaded(model.getPomFile().toPath())) {
+//            downloadDependencies(model.getPomFile().toPath());
+//        }
 
         for (Dependency dependency : model.getDependencies()) {
 
-            for (Path jarFile : convertToJarFile(model, dependency)) {
+            List<Path> jarFiles = convertToJarFile(model, dependency);
 
-                if (!Files.exists(jarFile)) {
-                    downloadDependencies(folder);
-                }
+            for (Path jarFile : jarFiles) {
 
-                jarFiles.add(jarFile);
+//                if (!Files.exists(jarFile)) {
+//                downloadDependencies(model.getPomFile().toPath());
+//                }
+
+                output.add(jarFile);
             }
         }
 
-        return jarFiles;
+        return output;
+    }
+
+    public static boolean isParentProject(Model model) {
+        return model.getPackaging().equalsIgnoreCase("pom");
+    }
+
+    public static boolean isMaven(Path folder) {
+        return Files.exists(folder.resolve("pom.xml"));
+    }
+
+    public boolean isDownloaded(Path folder) {
+
+        String content = FileUtils.read(folder.resolve(".cache"));
+
+        return true;
     }
 }

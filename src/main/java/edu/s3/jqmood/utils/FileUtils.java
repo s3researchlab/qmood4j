@@ -1,8 +1,12 @@
 package edu.s3.jqmood.utils;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,12 +27,13 @@ public class FileUtils {
 
     public static List<Path> getFilesFromFolder(Path folder, List<String> ignoredPatterns, String extension)
             throws IOException {
+        
+        if(!Files.exists(folder)) {
+            return new ArrayList<>();
+        }
 
-        return Files.walk(folder)
-                .filter(Files::isRegularFile)
-                .filter(s -> s.toString().endsWith(extension))
-                .filter(s -> !matches(s, ignoredPatterns))
-                .collect(Collectors.toList());
+        return Files.walk(folder).filter(Files::isRegularFile).filter(s -> s.toString().endsWith(extension))
+                .filter(s -> !matches(s, ignoredPatterns)).collect(Collectors.toList());
     }
 
     /**
@@ -51,6 +56,23 @@ public class FileUtils {
         }
 
         return false;
+    }
+
+    public static String read(Path file) {
+        try {
+            return Files.readString(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void write(Path file, String content) {
+        try {
+            Files.writeString(file, content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

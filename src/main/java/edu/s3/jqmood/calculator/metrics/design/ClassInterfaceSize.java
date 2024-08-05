@@ -17,10 +17,10 @@ public class ClassInterfaceSize extends DesignMetric {
     public MetricProperty getProperty() {
         return MetricProperty.MESSAGING;
     }
-    
+
     @Override
     public double calculate(ProjectModel pm, ClassModel cm) {
-        
+
         double total = 0.0;
 
         for (MethodModel md : cm.getMethodModels()) {

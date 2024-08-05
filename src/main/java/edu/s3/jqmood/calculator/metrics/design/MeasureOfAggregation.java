@@ -17,7 +17,7 @@ public class MeasureOfAggregation extends DesignMetric {
     public MetricProperty getProperty() {
         return MetricProperty.COMPOSITION;
     }
-    
+
     @Override
     public double calculate(ProjectModel pm, ClassModel cm) {
 

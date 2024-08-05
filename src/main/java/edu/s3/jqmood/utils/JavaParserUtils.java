@@ -5,6 +5,7 @@ import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.resolution.UnsolvedSymbolException;
 import com.github.javaparser.resolution.types.ResolvedType;
+import com.github.javaparser.resolution.types.ResolvedTypeVariable;
 
 import edu.s3.jqmood.parser.UnResolvedType;
 
@@ -43,5 +44,14 @@ public class JavaParserUtils {
         } catch (UnsolvedSymbolException ex) {
             return new UnResolvedType(type);
         }
+    }
+
+    public static String getQualifiedName(ResolvedTypeVariable resolved) {
+
+        if (resolved.erasure().isReferenceType()) {
+            return resolved.erasure().asReferenceType().getQualifiedName();
+        }
+
+        return resolved.qualifiedName();
     }
 }

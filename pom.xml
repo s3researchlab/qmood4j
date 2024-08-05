@@ -50,6 +50,22 @@
             <artifactId>log4j-core</artifactId>
             <version>2.23.1</version>
         </dependency>
+        <!-- Unit Test :: JUnit-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.3.0</version>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
