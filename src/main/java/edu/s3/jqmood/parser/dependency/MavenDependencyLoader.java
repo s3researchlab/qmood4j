@@ -59,6 +59,8 @@ public class MavenDependencyLoader extends ReflectionDependencyLoader {
     @Override
     public SimpleEntry<List<Path>, List<Path>> load() throws IOException {
 
+        System.out.println("oi");
+        
         List<Path> targetFolders = getTargetFolders(folder);
 
         List<Path> javaFiles = new ArrayList<>();
@@ -70,8 +72,8 @@ public class MavenDependencyLoader extends ReflectionDependencyLoader {
 
             List<Path> files = FileUtils.getFilesFromFolder(folder, ignoredPatterns, ".java");
 //
-            javaFiles.addAll(files);
-            dependencies.addAll(loadMavenDependencies(folder));
+//            javaFiles.addAll(files);
+//            dependencies.addAll(loadMavenDependencies(folder));
 //
 //            if (!files.isEmpty()) {
 //                dependencies.add(loadReflectionDependencies(files));

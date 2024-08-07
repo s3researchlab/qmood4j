@@ -26,8 +26,7 @@ public class ProjectModel {
 
     public void addClassModel(ClassOrInterfaceDeclaration clsDecl) {
 
-        String fullClassName = clsDecl.getFullyQualifiedName()
-                .orElseThrow(() -> new RuntimeException("Class not found"));
+        String fullClassName = clsDecl.getFullyQualifiedName().orElseThrow(() -> new RuntimeException("Class not found"));
 
         GraphUtils.addNodeIfNotExist(extendsGraph, fullClassName);
 
@@ -41,6 +40,7 @@ public class ProjectModel {
                 GraphUtils.addEdgeIfNotExist(extendsGraph, fullClassName, extendedFullClassName);
 
             } catch (Exception ex) {
+                System.out.println("oiii");
                 // Ignore classes from third-party libraries
             }
         }

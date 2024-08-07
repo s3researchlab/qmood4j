@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import edu.s3.jqmood.model.ProjectModel;
+import edu.s3.jqmood.parser.CodeDependencies;
 import edu.s3.jqmood.parser.CodeLoader;
 import edu.s3.jqmood.parser.CodeParser;
 
@@ -34,22 +35,17 @@ public class Explorer {
 
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/toy");
 
-        logger.info("Folder: {}", folder);
-
         CodeLoader loader = new CodeLoader();
 
-        loader.addIgnoredPattern(".*/src/test/java/.*");
-        loader.addIgnoredPattern(".*Test.java");
-        
         loader.addIgnoredPattern(".*/guava-gwt/.*");
         loader.addIgnoredPattern(".*/android/.*");
         loader.addIgnoredPattern(".*/guava-testlib/.*");
         loader.addIgnoredPattern(".*/guava-tests/.*");
 
-        List<Path> fi = loader.loadFile(folder);
+        List<Path> files = loader.loadFile(folder);
 
-        System.out.println("files");
-        fi.stream().forEach(System.out::println);
+//        System.out.println("files");
+//        files.stream().forEach(System.out::println);
 //        
 //        loader.addIgnoredPattern(".*/target/.*");
 
@@ -59,17 +55,25 @@ public class Explorer {
 
 //        System.out.println(DependencyLoader.load(files));
 
-//        CodeParser parser = new CodeParser();
+        CodeDependencies dep = new CodeDependencies();
+
+        List<Path> deps = dep.load(folder, files);
+
+        System.out.println("deps");
+        deps.stream().forEach(System.out::println);
+
+        CodeParser parser = new CodeParser();
 
 //        System.out.println(DependencyLoader.load(folder));
 //
 //        parser.addLibraries(folder.resolve("src/main/java"));
+//        parser.addLibraries(folder.resolve("src/main/java/extend"));
 //
-//        for (Path dependency : MavenUtils.getJarFilePathsFromPomFile(folder)) {
-//            parser.addLibraries(dependency);
-//        }
+        for (Path dependency : deps) {
+            parser.addLibraries(dependency);
+        }
 //
-//        ProjectModel pm = parser.parse(files);
+        ProjectModel pm = parser.parse(files);
 //
 //        QMOODCalculator calculator = new QMOODCalculator();
 //
