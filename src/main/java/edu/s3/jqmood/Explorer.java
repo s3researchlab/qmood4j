@@ -15,6 +15,7 @@ import edu.s3.jqmood.calculator.QMOODCalculator;
 import edu.s3.jqmood.model.ProjectModel;
 import edu.s3.jqmood.parser.CodeLoader;
 import edu.s3.jqmood.parser.CodeParser;
+import edu.s3.jqmood.utils.LoggerUtils;
 
 public class Explorer {
 
@@ -22,27 +23,28 @@ public class Explorer {
 
     public static void main(String[] args) throws IOException {
 
-        logger.info("Scanning project...");
-        logger.info("");
+       
 
         Configurator.setRootLevel(Level.DEBUG);
 
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/grammatical-evolution");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/jedit");
-//        Path folder = Path.of("/Users/thiagodnf/Workspace/toy");
+        Path folder = Path.of("/Users/thiagodnf/Workspace/toy");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/jhotdraw-10.1");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/guava-33.2.1");
-        Path folder = Path.of("/Users/thiagodnf/Workspace/gson");
+//        Path folder = Path.of("/Users/thiagodnf/Workspace/gson");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/jackrabbit");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/nautilus-framework");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/hangman-in-javafx");
 
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/toy");
 
-        logger.info("------------------------------------------------------------------------");
-        logger.info("Code Loader");
-        logger.info("------------------------------------------------------------------------");
-
+        
+        logger.info("Scanning project...");
+        logger.info("");
+		logger.info("Target: {}", folder);
+		logger.info("");
+		
         CodeLoader loader = new CodeLoader(folder);
 
         loader.addIgnoredPattern(".*/guava-gwt/.*");
@@ -55,17 +57,11 @@ public class Explorer {
         List<Path> javaFiles = loader.getJavaFiles();
         List<Path> dependenciesFiles = loader.getDependencyFiles();
 
-        logger.info("------------------------------------------------------------------------");
-        logger.info("Code Parser");
-        logger.info("------------------------------------------------------------------------");
-
         CodeParser parser = new CodeParser();
 
         for (Path dependencyFile : dependenciesFiles) {
             parser.addLibraries(dependencyFile);
         }
-
-        parser.addLibraries(Paths.get("/Users/thiagodnf/Workspace/toy/src/main/java/methodoverride"));
 
         ProjectModel pm = parser.parse(javaFiles);
 
@@ -78,9 +74,9 @@ public class Explorer {
             logger.info(key + " = " + value);
         });
 
-        logger.info("------------------------------------------------------------------------");
+        logger.info(LoggerUtils.separator);
         logger.info("SUCCESS");
-        logger.info("------------------------------------------------------------------------");
+        logger.info(LoggerUtils.separator);
     }
 
 }

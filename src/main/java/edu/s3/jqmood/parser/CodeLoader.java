@@ -10,59 +10,82 @@ import org.apache.logging.log4j.Logger;
 
 import edu.s3.jqmood.loader.MavenLoader;
 import edu.s3.jqmood.utils.FileUtils;
+import edu.s3.jqmood.utils.LoggerUtils;
 
 public class CodeLoader {
 
-    private static Logger logger = LogManager.getLogger(CodeLoader.class);
+	private static Logger logger = LogManager.getLogger(CodeLoader.class);
 
-    private Path folder;
+	private Path folder;
 
-    private List<String> ignoredPatterns = new ArrayList<>();
+	private List<String> ignoredPatterns = new ArrayList<>();
 
-    private List<Path> jarFiles = new ArrayList<>();
+	private List<Path> jarFiles = new ArrayList<>();
 
-    private List<Path> dependencyFiles = new ArrayList<>();
+	private List<Path> dependencyFiles = new ArrayList<>();
 
-    public CodeLoader(Path folder) {
+	public CodeLoader(Path folder) {
 
-        this.folder = folder;
+		this.folder = folder;
 
-        this.addIgnoredPattern(".*module-info.java");
-        this.addIgnoredPattern(".*package-info.java");
-        this.addIgnoredPattern(".*/src/test/java/.*");
-        this.addIgnoredPattern(".*Test.java");
-    }
+		this.addIgnoredPattern(".*module-info.java");
+		this.addIgnoredPattern(".*package-info.java");
+		this.addIgnoredPattern(".*/src/test/java/.*");
+		this.addIgnoredPattern(".*Test.java");
+	}
 
-    public void addIgnoredPattern(String pattern) {
+	public void addIgnoredPattern(String pattern) {
 
-        this.ignoredPatterns.add(pattern);
-    }
+		this.ignoredPatterns.add(pattern);
+	}
 
-    public List<Path> getJavaFiles() {
+	public List<Path> getJavaFiles() {
 
-        return this.jarFiles;
-    }
+		return this.jarFiles;
+	}
 
-    public List<Path> getDependencyFiles() {
+	public List<Path> getDependencyFiles() {
 
-        return this.dependencyFiles;
-    }
+		return this.dependencyFiles;
+	}
 
-    public void load() {
-        this.loadJarFiles();
-        this.loadDependencyFiles();
-    }
+	public void load() {
 
-    private void loadJarFiles() {
+		logger.info(LoggerUtils.separator);
+		logger.info("Code Loader");
+		logger.info(LoggerUtils.separator);
 
-        this.jarFiles = FileUtils.getFilesFromFolder(this.folder, this.ignoredPatterns, ".java");
-    }
+		this.loadJarFiles();
+		this.loadDependencyFiles();
+	}
 
-    private void loadDependencyFiles() {
+	private void loadJarFiles() {
 
-        if (Files.exists(this.folder.resolve("pom.xml"))) {
-            this.dependencyFiles = new MavenLoader().load(this.folder);
-        }
-    }
+		logger.info("");
+		logger.info("Ignoring the following patterns");
+		logger.info("");
+
+		for (int i = 0; i < ignoredPatterns.size(); i++) {
+
+			String pattern = ignoredPatterns.get(i);
+
+			logger.info("({}/{}) Pattern ignored: {}", i + 1, ignoredPatterns.size(), pattern);
+		}
+
+		logger.info("");
+		logger.info("Completed ");
+		logger.info("");
+		logger.info("Loading .java files");
+		logger.info("");
+
+		this.jarFiles = FileUtils.getFilesFromFolder(this.folder, this.ignoredPatterns, ".java");
+	}
+
+	private void loadDependencyFiles() {
+
+		if (Files.exists(this.folder.resolve("pom.xml"))) {
+			this.dependencyFiles = new MavenLoader().load(this.folder);
+		}
+	}
 
 }

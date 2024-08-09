@@ -24,144 +24,166 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeS
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 
 import edu.s3.jqmood.model.ProjectModel;
+import edu.s3.jqmood.utils.LoggerUtils;
 
 public class CodeParser {
 
-    private static Logger logger = LogManager.getLogger(CodeParser.class);
+	private static Logger logger = LogManager.getLogger(CodeParser.class);
 
-    private static final DataKey<Path> PATH = new DataKey<>() {
-    };
+	private static final DataKey<Path> PATH = new DataKey<>() {
+	};
 
-    private List<Path> libraries = new ArrayList<>();
+	private List<Path> libraries = new ArrayList<>();
 
-    public void addLibraries(Path library) {
-        this.libraries.add(library);
-    }
+	public void addLibraries(Path library) {
+		this.libraries.add(library);
+	}
 
-    public ProjectModel parse(List<Path> files) throws IOException {
+	public ProjectModel parse(List<Path> files) throws IOException {
 
-        StaticJavaParser.getParserConfiguration().setCharacterEncoding(StandardCharsets.UTF_8);
-        StaticJavaParser.getParserConfiguration().setSymbolResolver(getSymbolResolver());
+		logger.info(LoggerUtils.separator);
+		logger.info("Code Parser");
+		logger.info(LoggerUtils.separator);
 
-        List<ClassOrInterfaceDeclaration> considered = new ArrayList<>();
-        List<ClassOrInterfaceDeclaration> ignored = new ArrayList<>();
+		StaticJavaParser.getParserConfiguration().setCharacterEncoding(StandardCharsets.UTF_8);
+		StaticJavaParser.getParserConfiguration().setSymbolResolver(getSymbolResolver());
 
-        for (int i = 0; i < files.size(); i++) {
+		logger.info("");
+		logger.info(LoggerUtils.title("Parsing all java files"));
+		logger.info("");
 
-            Path file = files.get(i);
+		List<ClassOrInterfaceDeclaration> considered = new ArrayList<>();
+		List<ClassOrInterfaceDeclaration> ignored = new ArrayList<>();
 
-            logger.info("({}/{}) Parsing {}", i + 1, files.size(), file);
+		for (int i = 0; i < files.size(); i++) {
 
-            CompilationUnit cu = StaticJavaParser.parse(file);
+			Path file = files.get(i);
 
-            cu.accept(new VoidVisitorAdapter<Void>() {
+			logger.info("({}/{}) Parsing {}", i + 1, files.size(), file);
 
-                @Override
-                public void visit(ClassOrInterfaceDeclaration clsDecl, Void v) {
+			CompilationUnit cu = StaticJavaParser.parse(file);
 
-                    clsDecl.setData(PATH, file);
+			cu.accept(new VoidVisitorAdapter<Void>() {
 
-                    if (clsDecl.isTopLevelType()) {
-                        considered.add(clsDecl);
-                    } else {
+				@Override
+				public void visit(ClassOrInterfaceDeclaration clsDecl, Void v) {
 
-                        Optional<Node> parent = clsDecl.getParentNode();
+					clsDecl.setData(PATH, file);
 
-                        if (parent.isPresent()) {
+					if (clsDecl.isTopLevelType()) {
+						considered.add(clsDecl);
+					} else {
 
-                            if (parent.get() instanceof LocalClassDeclarationStmt) {
-                                ignored.add(clsDecl);
-                            } else {
-                                considered.add(clsDecl);
-                            }
-                        }
-                    }
+						Optional<Node> parent = clsDecl.getParentNode();
 
-                    super.visit(clsDecl, null);
-                }
+						if (parent.isPresent()) {
 
-            }, null);
-        }
+							if (parent.get() instanceof LocalClassDeclarationStmt) {
+								ignored.add(clsDecl);
+							} else {
+								considered.add(clsDecl);
+							}
+						}
+					}
 
-        logger.info("");
-        logger.info("Completed");
-        logger.info("");
-        logger.info("Class/Interface Declarations: {}, Ignored: {}", considered.size(), ignored.size());
-        logger.info("");
-        logger.info("There are the ignored classes");
-        logger.info("");
+					super.visit(clsDecl, null);
+				}
 
-        for (ClassOrInterfaceDeclaration clsDecl : ignored) {
-            logger.info("\t'{}' from {}", clsDecl.getNameAsString(), clsDecl.getData(PATH));
-        }
+			}, null);
+		}
 
-        logger.info("");
-        logger.info("Resolving all classes and interfaces");
-        logger.info("");
-        ProjectModel pm = new ProjectModel();
+		logger.info("");
+		logger.info("Completed");
+		logger.info("");
+		logger.info("Class/Interface Declarations: {}, Ignored: {}", considered.size(), ignored.size());
 
-        for (int i = 0; i < considered.size(); i++) {
+		if (!ignored.isEmpty()) {
 
-            ClassOrInterfaceDeclaration clsDecl = considered.get(i);
+			logger.info("");
+			logger.info(LoggerUtils.title("Ignored Classes"));
+			logger.info("");
 
-            Path file = clsDecl.getData(PATH);
+			for (int i = 0; i < ignored.size(); i++) {
 
-            logger.info("({}/{}) Resolving '{}' from {}", i + 1, considered.size(), clsDecl.getNameAsString(), file);
+				ClassOrInterfaceDeclaration clsDecl = ignored.get(i);
 
-            pm.addClassModel(clsDecl);
-        }
-        
-        logger.info("");
-        logger.info("Completed");
-        logger.info("");
-        logger.info("Classes: {}, Interfaces: {}", pm.getNumberOfClasses(), pm.getNumberOfInterfaces());
-        logger.info("");
-       
-        return pm;
-    }
+				logger.info("({}/{}) Class '{}' from {}", i + 1, ignored.size(), clsDecl.getNameAsString(),
+						clsDecl.getData(PATH));
+			}
+		}
 
-    /**
-     * It returns a combined type solver by taking into account new libraries (it
-     * could could be folders with source codes or third-party .jar libraries)
-     *
-     * @param libraries should not be null
-     * @return a combined type solver with folders and jar libraries
-     * @throws IOException some I/O errors happen
-     */
-    public static CombinedTypeSolver getCombinedTypeSolver(List<Path> libraries) throws IOException {
+		logger.info("");
+		logger.info(LoggerUtils.title("Resolving all classes and interfaces"));
+		logger.info("");
 
-        logger.info("");
-        logger.info("Setting up symbol resolvers");
-        logger.info("");
+		ProjectModel pm = new ProjectModel();
 
-        CombinedTypeSolver combinedTypeSolver = new CombinedTypeSolver();
+		for (int i = 0; i < considered.size(); i++) {
 
-        combinedTypeSolver.add(new ReflectionTypeSolver());
+			ClassOrInterfaceDeclaration clsDecl = considered.get(i);
 
-        logger.info("(1/{}) Adding Symbol Resolver: Internal Reflection Resolver", libraries.size() + 1);
+			Path file = clsDecl.getData(PATH);
 
-        for (int i = 0; i < libraries.size(); i++) {
+			logger.info("({}/{}) Resolving '{}' from {}", i + 1, considered.size(), clsDecl.getNameAsString(), file);
 
-            Path library = libraries.get(i);
+			pm.addClassModel(clsDecl);
+		}
 
-            logger.info("({}/{}) Adding Symbol Resolver: {}", i + 2, libraries.size() + 1, library);
+		logger.info("");
+		logger.info("Completed");
+		logger.info("");
+		logger.info("Classes: {}, Interfaces: {}", pm.getNumberOfClasses(), pm.getNumberOfInterfaces());
+		logger.info("");
 
-            if (library.toString().endsWith(".jar")) {
-                combinedTypeSolver.add(new JarTypeSolver(library));
-            } else {
-                combinedTypeSolver.add(new JavaParserTypeSolver(library));
-            }
-        }
+		return pm;
+	}
 
-        logger.info("");
-        logger.info("Completed. Using {} Symbol Resolvers. Parsing files...", libraries.size() + 1);
-        logger.info("");
+	/**
+	 * It returns a combined type solver by taking into account new libraries (it
+	 * could could be folders with source codes or third-party .jar libraries)
+	 *
+	 * @param libraries should not be null
+	 * @return a combined type solver with folders and jar libraries
+	 * @throws IOException some I/O errors happen
+	 */
+	public static CombinedTypeSolver getCombinedTypeSolver(List<Path> libraries) throws IOException {
 
-        return combinedTypeSolver;
-    }
+		logger.info("");
+		logger.info("Setting up symbol resolvers");
+		logger.info("");
 
-    public JavaSymbolSolver getSymbolResolver() throws IOException {
-        return new JavaSymbolSolver(getCombinedTypeSolver(libraries));
-    }
+		CombinedTypeSolver combinedTypeSolver = new CombinedTypeSolver();
+
+		combinedTypeSolver.add(new ReflectionTypeSolver());
+
+		int jarsCounter = 0;
+		int foldersCounter = 0;
+
+		for (int i = 0; i < libraries.size(); i++) {
+
+			Path library = libraries.get(i);
+
+			logger.info("({}/{}) Adding resolver for {}", i + 1, libraries.size(), library);
+
+			if (library.toString().endsWith(".jar")) {
+				combinedTypeSolver.add(new JarTypeSolver(library));
+				jarsCounter++;
+			} else {
+				combinedTypeSolver.add(new JavaParserTypeSolver(library));
+				foldersCounter++;
+			}
+		}
+
+		logger.info("");
+		logger.info("Completed");
+		logger.info("");
+		logger.info("Jar Files: {}, Folders: {}", jarsCounter, foldersCounter);
+
+		return combinedTypeSolver;
+	}
+
+	public JavaSymbolSolver getSymbolResolver() throws IOException {
+		return new JavaSymbolSolver(getCombinedTypeSolver(libraries));
+	}
 
 }
