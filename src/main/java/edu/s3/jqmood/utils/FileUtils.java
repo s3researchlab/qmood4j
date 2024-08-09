@@ -34,6 +34,19 @@ public class FileUtils {
             throw new RuntimeException(e);
         }
     }
+    
+    public static List<Path> getSubFolders(Path folder, List<String> ignoredPatterns) {
+
+        if (!Files.exists(folder)) {
+            return new ArrayList<>();
+        }
+
+        try {
+            return Files.walk(folder).filter(Files::isDirectory).filter(s -> !matches(s, ignoredPatterns)).collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Verify if a given path (converted to a full path format) matches some pattern

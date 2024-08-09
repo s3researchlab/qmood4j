@@ -29,9 +29,9 @@ public class Explorer {
 
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/grammatical-evolution");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/jedit");
-        Path folder = Path.of("/Users/thiagodnf/Workspace/toy");
+//        Path folder = Path.of("/Users/thiagodnf/Workspace/toy");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/jhotdraw-10.1");
-//        Path folder = Path.of("/Users/thiagodnf/Workspace/guava-33.2.1");
+        Path folder = Path.of("/Users/thiagodnf/Workspace/guava-33.2.1");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/gson");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/jackrabbit");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/nautilus-framework");

@@ -23,101 +23,115 @@ import edu.s3.jqmood.utils.FileUtils;
 
 public class MavenLoader {
 
-    private static Logger logger = LogManager.getLogger(MavenLoader.class);
+	private static Logger logger = LogManager.getLogger(MavenLoader.class);
+	
+	public List<Path> load(Path folder) {
 
-    public List<Path> load(Path folder) {
+		logger.info("");
+		
+		List<Path> dependencies = load(folder, String.join(File.separator, List.of("src", "main", "java")));
 
-        return load(folder, String.join(File.separator, List.of("src", "main", "java")));
-    }
+		logger.info("");
+		logger.info("Complete");
 
-    private List<Path> load(Path folder, String srcDirectory) {
+		return dependencies;
+	}
 
-        logger.info("Processing: {}", folder);
+	private List<Path> load(Path folder, String srcDirectory) {
 
-        Path pomFile = folder.resolve("pom.xml");
-        Path jarsFolder = folder.resolve("target", "dependencies");
+		logger.info("Analysing: {}", folder);
 
-        if (!Files.exists(pomFile)) {
-            return List.of();
-        }
+		Path pomFile = folder.resolve("pom.xml");
+		Path jarsFolder = folder.resolve("target", "dependencies");
 
-        Model model = readPomFile(pomFile);
+		if (!Files.exists(pomFile)) {
+			return List.of();
+		}
 
-        if (model.getBuild() != null && model.getBuild().getSourceDirectory() != null) {
-            srcDirectory = model.getBuild().getSourceDirectory();
-        }
+		Model model = readPomFile(pomFile);
 
-        List<Path> dependencies = new ArrayList<>();
+		if (model.getBuild() != null && model.getBuild().getSourceDirectory() != null) {
+			srcDirectory = model.getBuild().getSourceDirectory();
+		}
 
-        if (model.getPackaging().equalsIgnoreCase("pom")) {
+		List<Path> dependencies = new ArrayList<>();
 
-            for (String module : model.getModules()) {
-                dependencies.addAll(load(folder.resolve(module), srcDirectory));
-            }
-        }
+		if (model.getPackaging().equalsIgnoreCase("pom")) {
 
-        if (Files.exists(folder.resolve(srcDirectory))) {
-            dependencies.add(folder.resolve(srcDirectory));
-        }
+			List<Path> deps = new ArrayList<>();
+			
+			for (String module : model.getModules()) {
+				dependencies.addAll(load(folder.resolve(module), srcDirectory));
+			}
+			
+			for (String module : model.getModules()) {
+				
+			}
+			
+		}
 
-        if (!Files.exists(jarsFolder)) {
+		if (Files.exists(folder.resolve(srcDirectory))) {
+			dependencies.add(folder.resolve(srcDirectory));
+		}
 
-            FileUtils.createIfNotExists(jarsFolder);
+		if (!Files.exists(jarsFolder)) {
 
-            for (Dependency dependency : model.getDependencies()) {
-                downloadJarFile(folder, jarsFolder, dependency);
-            }
+			FileUtils.createIfNotExists(jarsFolder);
 
-            if (model.getDependencyManagement() != null) {
+			for (Dependency dependency : model.getDependencies()) {
+				downloadJarFile(folder, jarsFolder, dependency);
+			}
 
-                for (Dependency dependency : model.getDependencyManagement().getDependencies()) {
-                    downloadJarFile(folder, jarsFolder, dependency);
-                }
-            }
-        }
+			if (model.getDependencyManagement() != null) {
 
-        dependencies.addAll(FileUtils.getFilesFromFolder(jarsFolder, ".jar"));
+				for (Dependency dependency : model.getDependencyManagement().getDependencies()) {
+					downloadJarFile(folder, jarsFolder, dependency);
+				}
+			}
+		}
 
-        return dependencies;
-    }
+		dependencies.addAll(FileUtils.getFilesFromFolder(jarsFolder, ".jar"));
 
-    private Model readPomFile(Path pomFile) {
+		return dependencies;
+	}
 
-        checkNotNull(pomFile);
-        checkArgument(Files.exists(pomFile), pomFile + " not found");
+	private Model readPomFile(Path pomFile) {
 
-        MavenXpp3Reader reader = new MavenXpp3Reader();
+		checkNotNull(pomFile);
+		checkArgument(Files.exists(pomFile), pomFile + " not found");
 
-        try {
+		MavenXpp3Reader reader = new MavenXpp3Reader();
 
-            Model model = reader.read(new FileReader(pomFile.toFile()));
+		try {
 
-            model.setPomFile(pomFile.toFile());
+			Model model = reader.read(new FileReader(pomFile.toFile()));
 
-            return model;
-        } catch (IOException | XmlPullParserException e) {
-            throw new RuntimeException(e);
-        }
-    }
+			model.setPomFile(pomFile.toFile());
 
-    private void downloadJarFile(Path folder, Path jarFolder, Dependency dependency) {
+			return model;
+		} catch (IOException | XmlPullParserException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-        String groupId = dependency.getGroupId();
-        String artifactId = dependency.getArtifactId();
-        String version = dependency.getVersion();
+	private void downloadJarFile(Path folder, Path jarFolder, Dependency dependency) {
 
-        if (version == null) {
-            return;
-        }
+		String groupId = dependency.getGroupId();
+		String artifactId = dependency.getArtifactId();
+		String version = dependency.getVersion();
 
-        String artifact = "-Dartifact=%s:%s:%s:jar".formatted(groupId, artifactId, version);
-        String program = "/opt/homebrew/bin/mvn";
-        String plugin = "org.apache.maven.plugins:maven-dependency-plugin:copy";
-        String output = "-DoutputDirectory=%s".formatted(jarFolder);
+		if (version == null) {
+			return;
+		}
 
-        List<String> args = List.of(program, "-f", folder.toString(), plugin, artifact, output);
+		String artifact = "-Dartifact=%s:%s:%s:jar".formatted(groupId, artifactId, version);
+		String program = "/opt/homebrew/bin/mvn";
+		String plugin = "org.apache.maven.plugins:maven-dependency-plugin:copy";
+		String output = "-DoutputDirectory=%s".formatted(jarFolder);
 
-        CommandUtils.run(args);
-    }
+		List<String> args = List.of(program, "-f", folder.toString(), plugin, artifact, output);
+
+		CommandUtils.run(args);
+	}
 
 }

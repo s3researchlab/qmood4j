@@ -55,12 +55,6 @@ public class CodeLoader {
 		logger.info("Code Loader");
 		logger.info(LoggerUtils.separator);
 
-		this.loadJarFiles();
-		this.loadDependencyFiles();
-	}
-
-	private void loadJarFiles() {
-
 		logger.info("");
 		logger.info("Ignoring the following patterns");
 		logger.info("");
@@ -71,21 +65,46 @@ public class CodeLoader {
 
 			logger.info("({}/{}) Pattern ignored: {}", i + 1, ignoredPatterns.size(), pattern);
 		}
-
+		
 		logger.info("");
 		logger.info("Completed ");
-		logger.info("");
-		logger.info("Loading .java files");
-		logger.info("");
+		
+		this.loadJarFiles();
+		this.loadDependencyFiles();
+	}
 
+	private void loadJarFiles() {
+
+		List<Path> f = FileUtils.getSubFolders(folder, this.ignoredPatterns);
+		
+		f.stream().forEach(System.out::println);
+		
+		
+		
+		logger.info("");
+		logger.info(LoggerUtils.title("Loading .java files"));
+		logger.info("");
+		
 		this.jarFiles = FileUtils.getFilesFromFolder(this.folder, this.ignoredPatterns, ".java");
+		
+		logger.info("Java files found: {}", this.jarFiles.size());
 	}
 
 	private void loadDependencyFiles() {
 
+		logger.info("");
+		logger.info(LoggerUtils.title("Loading dependency files"));
+		logger.info("");
+		
 		if (Files.exists(this.folder.resolve("pom.xml"))) {
+			
+			logger.info("Project type detected: Maven");
+			
 			this.dependencyFiles = new MavenLoader().load(this.folder);
 		}
+		
+		logger.info("");
+		logger.info("Dependencies found: {}", this.dependencyFiles.size());
 	}
 
 }

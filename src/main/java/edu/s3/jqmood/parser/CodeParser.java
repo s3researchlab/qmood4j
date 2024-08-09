@@ -41,6 +41,7 @@ public class CodeParser {
 
 	public ProjectModel parse(List<Path> files) throws IOException {
 
+		logger.info("");
 		logger.info(LoggerUtils.separator);
 		logger.info("Code Parser");
 		logger.info(LoggerUtils.separator);
