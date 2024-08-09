@@ -25,7 +25,7 @@ public class ProjectModel {
     private MutableGraph<String> extendsGraph = GraphBuilder.directed().build();
 
     public void addClassModel(ClassOrInterfaceDeclaration clsDecl) {
-
+        
         String fullClassName = clsDecl.getFullyQualifiedName().orElseThrow(() -> new RuntimeException("Class not found"));
 
         GraphUtils.addNodeIfNotExist(extendsGraph, fullClassName);

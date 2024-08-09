@@ -21,14 +21,14 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import edu.s3.jqmood.utils.FileUtils;
 
-public class MavenDependencyLoader extends ReflectionDependencyLoader {
+public class MavenDependencyLoader implements DependencyLoader {
 
     private static Logger logger = LogManager.getLogger(MavenDependencyLoader.class);
 
     private List<String> ignoredPatterns = new ArrayList<>();
 
     public MavenDependencyLoader(Path folder, List<String> ignoredPatterns) {
-        super(folder, ignoredPatterns);
+//        super(folder, ignoredPatterns);
 
         this.ignoredPatterns = ignoredPatterns;
     }
@@ -56,35 +56,35 @@ public class MavenDependencyLoader extends ReflectionDependencyLoader {
         return folders;
     }
 
-    @Override
+//    @Override
     public SimpleEntry<List<Path>, List<Path>> load() throws IOException {
 
-        System.out.println("oi");
-        
-        List<Path> targetFolders = getTargetFolders(folder);
-
-        List<Path> javaFiles = new ArrayList<>();
-        List<Path> dependencies = new ArrayList<>();
-
-        for (Path folder : targetFolders) {
-
-            System.out.println(">>>>>>>>"+folder);
-
-            List<Path> files = FileUtils.getFilesFromFolder(folder, ignoredPatterns, ".java");
+//        System.out.println("oi");
+//        
+//        List<Path> targetFolders = getTargetFolders(folder);
 //
-//            javaFiles.addAll(files);
-//            dependencies.addAll(loadMavenDependencies(folder));
+//        List<Path> javaFiles = new ArrayList<>();
+//        List<Path> dependencies = new ArrayList<>();
 //
-//            if (!files.isEmpty()) {
-//                dependencies.add(loadReflectionDependencies(files));
-//            }
-        }
+//        for (Path folder : targetFolders) {
+//
+//            System.out.println(">>>>>>>>"+folder);
+//
+//            List<Path> files = FileUtils.getFilesFromFolder(folder, ignoredPatterns, ".java");
+////
+////            javaFiles.addAll(files);
+////            dependencies.addAll(loadMavenDependencies(folder));
+////
+////            if (!files.isEmpty()) {
+////                dependencies.add(loadReflectionDependencies(files));
+////            }
+//        }
 
 //        List
-        System.out.println("Dependencies");
-        dependencies.stream().forEach(System.out::println);
-        System.out.println("Files");
-        javaFiles.stream().forEach(System.out::println);
+//        System.out.println("Dependencies");
+//        dependencies.stream().forEach(System.out::println);
+//        System.out.println("Files");
+//        javaFiles.stream().forEach(System.out::println);
 
         return null;
     }

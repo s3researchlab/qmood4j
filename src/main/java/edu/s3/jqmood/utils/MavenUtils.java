@@ -64,13 +64,7 @@ public class MavenUtils {
 
         String dir = String.join(File.separator, userHome, m2, group, artifact, version);
 
-        try {
-            return FileUtils.getFilesFromFolder(Paths.get(dir), ".jar");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return new ArrayList<>();
+        return FileUtils.getFilesFromFolder(Paths.get(dir), ".jar");
 
 //        String jarFile = artifact + "-" + version + ".jar";
 //

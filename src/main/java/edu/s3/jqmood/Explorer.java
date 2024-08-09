@@ -2,16 +2,17 @@ package edu.s3.jqmood;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.AbstractMap.SimpleEntry;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
+import edu.s3.jqmood.calculator.MetricValues;
+import edu.s3.jqmood.calculator.QMOODCalculator;
 import edu.s3.jqmood.model.ProjectModel;
-import edu.s3.jqmood.parser.CodeDependencies;
 import edu.s3.jqmood.parser.CodeLoader;
 import edu.s3.jqmood.parser.CodeParser;
 
@@ -21,70 +22,65 @@ public class Explorer {
 
     public static void main(String[] args) throws IOException {
 
+        logger.info("Scanning project...");
+        logger.info("");
+
         Configurator.setRootLevel(Level.DEBUG);
 
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/grammatical-evolution");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/jedit");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/toy");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/jhotdraw-10.1");
-        Path folder = Path.of("/Users/thiagodnf/Workspace/guava-33.2.1");
-//        Path folder = Path.of("/Users/thiagodnf/Workspace/gson");
+//        Path folder = Path.of("/Users/thiagodnf/Workspace/guava-33.2.1");
+        Path folder = Path.of("/Users/thiagodnf/Workspace/gson");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/jackrabbit");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/nautilus-framework");
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/hangman-in-javafx");
 
 //        Path folder = Path.of("/Users/thiagodnf/Workspace/toy");
 
-        CodeLoader loader = new CodeLoader();
+        logger.info("------------------------------------------------------------------------");
+        logger.info("Code Loader");
+        logger.info("------------------------------------------------------------------------");
+
+        CodeLoader loader = new CodeLoader(folder);
 
         loader.addIgnoredPattern(".*/guava-gwt/.*");
         loader.addIgnoredPattern(".*/android/.*");
         loader.addIgnoredPattern(".*/guava-testlib/.*");
         loader.addIgnoredPattern(".*/guava-tests/.*");
 
-        List<Path> files = loader.loadFile(folder);
+        loader.load();
 
-//        System.out.println("files");
-//        files.stream().forEach(System.out::println);
-//        
-//        loader.addIgnoredPattern(".*/target/.*");
+        List<Path> javaFiles = loader.getJavaFiles();
+        List<Path> dependenciesFiles = loader.getDependencyFiles();
 
-//        SimpleEntry<List<Path>, List<Path>> output = loader.load(folder);
-
-//        \h(System.out::println);
-
-//        System.out.println(DependencyLoader.load(files));
-
-        CodeDependencies dep = new CodeDependencies();
-
-        List<Path> deps = dep.load(folder, files);
-
-        System.out.println("deps");
-        deps.stream().forEach(System.out::println);
+        logger.info("------------------------------------------------------------------------");
+        logger.info("Code Parser");
+        logger.info("------------------------------------------------------------------------");
 
         CodeParser parser = new CodeParser();
 
-//        System.out.println(DependencyLoader.load(folder));
-//
-//        parser.addLibraries(folder.resolve("src/main/java"));
-//        parser.addLibraries(folder.resolve("src/main/java/extend"));
-//
-        for (Path dependency : deps) {
-            parser.addLibraries(dependency);
+        for (Path dependencyFile : dependenciesFiles) {
+            parser.addLibraries(dependencyFile);
         }
-//
-        ProjectModel pm = parser.parse(files);
-//
-//        QMOODCalculator calculator = new QMOODCalculator();
-//
-//        MetricValues values = calculator.calculate(pm);
-//
-//        values.forEach((key, value) -> {
-//
-//            logger.info(key + " = " + value);
-//        });
-//
-//        logger.info("Done.");
+
+        parser.addLibraries(Paths.get("/Users/thiagodnf/Workspace/toy/src/main/java/methodoverride"));
+
+        ProjectModel pm = parser.parse(javaFiles);
+
+        QMOODCalculator calculator = new QMOODCalculator();
+
+        MetricValues values = calculator.calculate(pm);
+
+        values.forEach((key, value) -> {
+
+            logger.info(key + " = " + value);
+        });
+
+        logger.info("------------------------------------------------------------------------");
+        logger.info("SUCCESS");
+        logger.info("------------------------------------------------------------------------");
     }
 
 }

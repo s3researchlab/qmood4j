@@ -16,20 +16,23 @@ public class FileUtils {
         throw new UnsupportedOperationException("This class cannot be instantiated");
     }
 
-    public static List<Path> getFilesFromFolder(Path folder, String extension) throws IOException {
+    public static List<Path> getFilesFromFolder(Path folder, String extension) {
 
         return getFilesFromFolder(folder, new ArrayList<>(), extension);
     }
 
-    public static List<Path> getFilesFromFolder(Path folder, List<String> ignoredPatterns, String extension)
-            throws IOException {
+    public static List<Path> getFilesFromFolder(Path folder, List<String> ignoredPatterns, String extension) {
 
         if (!Files.exists(folder)) {
             return new ArrayList<>();
         }
 
-        return Files.walk(folder).filter(Files::isRegularFile).filter(s -> s.toString().endsWith(extension))
-                .filter(s -> !matches(s, ignoredPatterns)).collect(Collectors.toList());
+        try {
+            return Files.walk(folder).filter(Files::isRegularFile).filter(s -> s.toString().endsWith(extension))
+                    .filter(s -> !matches(s, ignoredPatterns)).collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
