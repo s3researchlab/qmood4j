@@ -15,8 +15,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>22</java.version>
-        <maven.compiler.target>22</maven.compiler.target>
-        <maven.compiler.source>22</maven.compiler.source>
         <main.class>edu.s3.qmood4j.MainClass</main.class>
     </properties>
 
@@ -97,11 +95,11 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-            <!-- JavaDoc
+            <!-- JavaDoc -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.8.0</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -115,7 +113,7 @@
                      <source>${java.version}</source>
                     <doclint>all,-missing</doclint>
                 </configuration>
-            </plugin> -->
+            </plugin> 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
