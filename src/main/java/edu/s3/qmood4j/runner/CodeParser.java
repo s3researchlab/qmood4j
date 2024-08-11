@@ -23,7 +23,7 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.JarTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 
-import edu.s3.jqmood.model.ProjectModel;
+import edu.s3.qmood4j.model.ProjectModel;
 import edu.s3.qmood4j.utils.LoggerUtils;
 
 public class CodeParser {

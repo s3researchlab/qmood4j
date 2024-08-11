@@ -1,18 +1,20 @@
 package edu.s3.qmood4j.runner;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.s3.jqmood.model.ProjectModel;
-import edu.s3.qmood4j.metrics.MetricValues;
+import edu.s3.qmood4j.metrics.DesignMetric;
+import edu.s3.qmood4j.metrics.MetricProperty;
+import edu.s3.qmood4j.metrics.QualityMetric;
 import edu.s3.qmood4j.metrics.design.AverageNumberOfAncestors;
 import edu.s3.qmood4j.metrics.design.ClassInterfaceSize;
 import edu.s3.qmood4j.metrics.design.CohesionAmongMethodsOfClass;
 import edu.s3.qmood4j.metrics.design.DataAccessMetrics;
-import edu.s3.qmood4j.metrics.design.DesignMetric;
 import edu.s3.qmood4j.metrics.design.DesignSizeInClasses;
 import edu.s3.qmood4j.metrics.design.DirectClassCoupling;
 import edu.s3.qmood4j.metrics.design.MeasureOfAggregation;
@@ -24,9 +26,9 @@ import edu.s3.qmood4j.metrics.quality.Effectiveness;
 import edu.s3.qmood4j.metrics.quality.Extendibility;
 import edu.s3.qmood4j.metrics.quality.Flexibility;
 import edu.s3.qmood4j.metrics.quality.Functionality;
-import edu.s3.qmood4j.metrics.quality.QualityMetric;
 import edu.s3.qmood4j.metrics.quality.Reusability;
 import edu.s3.qmood4j.metrics.quality.Understandability;
+import edu.s3.qmood4j.model.ProjectModel;
 import edu.s3.qmood4j.utils.LoggerUtils;
 
 public class CodeCalculator {
@@ -39,12 +41,16 @@ public class CodeCalculator {
 
     private List<QualityMetric> qualityMetrics = new ArrayList<>();
 
+    private Map<MetricProperty, Double> designValues = new HashMap<>();
+
+    private Map<MetricProperty, Double> qualityValues = new HashMap<>();
+
     public CodeCalculator(ProjectModel projectModel) {
 
         logger.info(LoggerUtils.separator);
         logger.info(LoggerUtils.green("Code Calculator"));
         logger.info(LoggerUtils.separator);
-        
+
         this.projectModel = projectModel;
 
         this.designMetrics.add(new DesignSizeInClasses());
@@ -66,21 +72,36 @@ public class CodeCalculator {
         this.qualityMetrics.add(new Extendibility());
         this.qualityMetrics.add(new Effectiveness());
     }
+    
+    public Map<MetricProperty, Double> getDesignValues() {
+        return this.designValues;
+    }
 
-    public MetricValues calculate() {
+    public Map<MetricProperty, Double> getQualityValues() {
+        return this.qualityValues;
+    }
 
-        logger.info("Calculating {} design and {} quality metrics", designMetrics.size(), qualityMetrics.size());
+    public void calculate() {
 
-        MetricValues mv = new MetricValues();
+//        logger.info("Calculating {} design and {} quality metrics", designMetrics.size(), qualityMetrics.size());
+
+        logger.info("");
+        logger.info(LoggerUtils.title("Calculating design metrics"));
 
         for (DesignMetric metric : designMetrics) {
-            mv.put(metric.getProperty(), metric.calculate(projectModel));
+            this.designValues.put(metric.getProperty(), metric.calculate(projectModel));
         }
 
+        logger.info("");
+        logger.info("Completed");
+        logger.info("");
+        logger.info(LoggerUtils.title("Calculating quality metrics"));
+
         for (QualityMetric metric : qualityMetrics) {
-            mv.put(metric.getProperty(), metric.calculate(mv));
+            qualityValues.put(metric.getProperty(), metric.calculate(designValues));
         }
         
-        return mv;
+        logger.info("");
+        logger.info("Completed");
     }
 }

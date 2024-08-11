@@ -12,8 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
-import edu.s3.jqmood.model.ProjectModel;
 import edu.s3.qmood4j.metrics.MetricValues;
+import edu.s3.qmood4j.model.ProjectModel;
 import edu.s3.qmood4j.runner.CodeCalculator;
 import edu.s3.qmood4j.runner.CodeLoader;
 import edu.s3.qmood4j.runner.CodeParser;
@@ -98,9 +98,15 @@ public class MainClass implements Callable<Integer> {
 
         CodeCalculator calculator = new CodeCalculator(pm);
       
-        MetricValues values = calculator.calculate();
+        calculator.calculate();
         
-        values.forEach((key, value) -> {
+        calculator.getDesignValues().forEach((key, value) -> {
+            logger.info(key + " = " + value);
+        });
+        
+        logger.info("");
+        
+        calculator.getQualityValues().forEach((key, value) -> {
             logger.info(key + " = " + value);
         });
         

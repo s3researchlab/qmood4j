@@ -1,7 +1,9 @@
 package edu.s3.qmood4j.metrics.quality;
 
+import java.util.Map;
+
 import edu.s3.qmood4j.metrics.MetricProperty;
-import edu.s3.qmood4j.metrics.MetricValues;
+import edu.s3.qmood4j.metrics.QualityMetric;
 
 public class Functionality implements QualityMetric {
 
@@ -10,13 +12,13 @@ public class Functionality implements QualityMetric {
     }
 
     @Override
-    public double calculate(MetricValues mv) {
+    public double calculate(Map<MetricProperty, Double> mv) {
 
-        double cohesion = mv.get(MetricProperty.COHESION);
-        double polymorphism = mv.get(MetricProperty.POLYMORPHISM);
-        double messaging = mv.get(MetricProperty.MESSAGING);
-        double hierarchies = mv.get(MetricProperty.HIERARCHIES);
-        double designSize = mv.get(MetricProperty.DESIGN_SIZE);
+        double cohesion = mv.getOrDefault(MetricProperty.COHESION, 0.0);
+        double polymorphism = mv.getOrDefault(MetricProperty.POLYMORPHISM, 0.0);
+        double messaging = mv.getOrDefault(MetricProperty.MESSAGING, 0.0);
+        double hierarchies = mv.getOrDefault(MetricProperty.HIERARCHIES, 0.0);
+        double designSize = mv.getOrDefault(MetricProperty.DESIGN_SIZE, 0.0);
 
         return 0.12 * cohesion + 0.22 * polymorphism + 0.22 * messaging + 0.22 * designSize + 0.22 * hierarchies;
     }

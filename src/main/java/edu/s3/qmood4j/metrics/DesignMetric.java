@@ -1,8 +1,7 @@
-package edu.s3.qmood4j.metrics.design;
+package edu.s3.qmood4j.metrics;
 
-import edu.s3.jqmood.model.ClassModel;
-import edu.s3.jqmood.model.ProjectModel;
-import edu.s3.qmood4j.metrics.Metric;
+import edu.s3.qmood4j.model.ClassModel;
+import edu.s3.qmood4j.model.ProjectModel;
 
 public abstract class DesignMetric implements Metric {
 

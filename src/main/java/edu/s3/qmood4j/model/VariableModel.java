@@ -1,4 +1,4 @@
-package edu.s3.jqmood.model;
+package edu.s3.qmood4j.model;
 
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.Parameter;

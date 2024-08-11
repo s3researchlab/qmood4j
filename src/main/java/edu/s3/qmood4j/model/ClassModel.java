@@ -1,4 +1,4 @@
-package edu.s3.jqmood.model;
+package edu.s3.qmood4j.model;
 
 import java.util.ArrayList;
 import java.util.List;
