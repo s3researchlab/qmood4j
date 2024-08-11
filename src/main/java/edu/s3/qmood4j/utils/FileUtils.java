@@ -128,12 +128,22 @@ public class FileUtils {
         return Paths.get(System.getProperty("user.dir"));
     }
 
-    public static List<String> readIgnoreFile( Path ignoreFile) {
+    public static List<String> readIgnoreFile(Path ignoreFile) {
 
         if (!Files.exists(ignoreFile)) {
             return List.of();
         }
 
         return readLines(ignoreFile);
+    }
+
+    public static void write(Path outputFile, String content) {
+        
+        try {
+            Files.writeString(outputFile, content);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

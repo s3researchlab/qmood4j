@@ -34,6 +34,9 @@ public class MainClass implements Callable<Integer> {
     @NotNull(message = "folder cannot be null")
     @Parameters(paramLabel = "folder", description = "the project's source code")
     protected Path folder;
+    
+    @Option(names = { "-o", "--output" }, description = "the output file with qmood metrics")
+    protected Path output = FileUtils.getCurrentFolder().resolve("qmood.properties");
 
     @Option(names = { "-d", "--debug" }, description = "enable the debugging mode")
     protected boolean debug = false;
@@ -98,18 +101,10 @@ public class MainClass implements Callable<Integer> {
 
         CodeCalculator calculator = new CodeCalculator(pm);
       
+        calculator.setOutputFile(output);;
         calculator.calculate();
         
-        calculator.getDesignValues().forEach((key, value) -> {
-            logger.info(key + " = " + value);
-        });
-        
         logger.info("");
-        
-        calculator.getQualityValues().forEach((key, value) -> {
-            logger.info(key + " = " + value);
-        });
-        
         logger.info(LoggerUtils.separator);
         logger.info(LoggerUtils.green("SUCCESS"));
         logger.info(LoggerUtils.separator);

@@ -1,5 +1,6 @@
 package edu.s3.qmood4j.runner;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ import edu.s3.qmood4j.metrics.quality.Functionality;
 import edu.s3.qmood4j.metrics.quality.Reusability;
 import edu.s3.qmood4j.metrics.quality.Understandability;
 import edu.s3.qmood4j.model.ProjectModel;
+import edu.s3.qmood4j.utils.FileUtils;
 import edu.s3.qmood4j.utils.LoggerUtils;
 
 public class CodeCalculator {
@@ -36,6 +38,8 @@ public class CodeCalculator {
     private static Logger logger = LogManager.getLogger(CodeCalculator.class);
 
     private ProjectModel projectModel;
+    
+    private Path outputFile;
 
     private List<DesignMetric> designMetrics = new ArrayList<>();
 
@@ -72,7 +76,7 @@ public class CodeCalculator {
         this.qualityMetrics.add(new Extendibility());
         this.qualityMetrics.add(new Effectiveness());
     }
-    
+
     public Map<MetricProperty, Double> getDesignValues() {
         return this.designValues;
     }
@@ -80,10 +84,12 @@ public class CodeCalculator {
     public Map<MetricProperty, Double> getQualityValues() {
         return this.qualityValues;
     }
+    
+    public void setOutputFile(Path outputFile) {
+        this.outputFile = outputFile; 
+    }
 
     public void calculate() {
-
-//        logger.info("Calculating {} design and {} quality metrics", designMetrics.size(), qualityMetrics.size());
 
         logger.info("");
         logger.info(LoggerUtils.title("Calculating design metrics"));
@@ -100,7 +106,52 @@ public class CodeCalculator {
         for (QualityMetric metric : qualityMetrics) {
             qualityValues.put(metric.getProperty(), metric.calculate(designValues));
         }
+
+        logger.info("");
+        logger.info("Completed");
+        logger.info("");
+        logger.info(LoggerUtils.title("Metrics"));
         
+        logger.info("");
+        logger.info("Design Metrics");
+        logger.info("");
+        
+        designValues.forEach((key, value) -> {
+           logger.info("%s=%s".formatted(key, value));
+        });
+
+        logger.info("");
+        logger.info("Quality Metrics");
+        logger.info("");
+        
+        qualityValues.forEach((key, value) -> {
+            logger.info("%s=%s".formatted(key, value));
+        });
+        
+        savingToFile();
+    }
+
+    private void savingToFile() {
+
+        logger.info("");
+        logger.info(LoggerUtils.title("Saving metrics to output file"));
+
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("# Design Metrics\n");
+        
+        designValues.forEach((key, value) -> {
+            builder.append("%s=%s\n".formatted(key, value));
+        });
+
+        builder.append("# Quality Metrics\n");
+        
+        qualityValues.forEach((key, value) -> {
+            builder.append("%s=%s\n".formatted(key, value));
+        });
+        
+        FileUtils.write(outputFile, builder.toString());
+
         logger.info("");
         logger.info("Completed");
     }
