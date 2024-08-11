@@ -1,4 +1,4 @@
-package edu.s3.qmood4j.parser;
+package edu.s3.qmood4j.runner;
 
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.resolution.types.ResolvedType;

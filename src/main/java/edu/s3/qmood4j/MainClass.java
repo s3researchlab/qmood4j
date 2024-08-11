@@ -13,10 +13,10 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import edu.s3.jqmood.model.ProjectModel;
-import edu.s3.qmood4j.calculator.MetricValues;
-import edu.s3.qmood4j.parser.CodeCalculator;
-import edu.s3.qmood4j.parser.CodeLoader;
-import edu.s3.qmood4j.parser.CodeParser;
+import edu.s3.qmood4j.metrics.MetricValues;
+import edu.s3.qmood4j.runner.CodeCalculator;
+import edu.s3.qmood4j.runner.CodeLoader;
+import edu.s3.qmood4j.runner.CodeParser;
 import edu.s3.qmood4j.settings.Settings;
 import edu.s3.qmood4j.utils.FileUtils;
 import edu.s3.qmood4j.utils.LoggerUtils;
@@ -97,7 +97,7 @@ public class MainClass implements Callable<Integer> {
         ProjectModel pm = parser.parse(loader.getJavaFiles());
 
         CodeCalculator calculator = new CodeCalculator(pm);
-                
+      
         MetricValues values = calculator.calculate();
         
         values.forEach((key, value) -> {

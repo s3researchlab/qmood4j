@@ -1,4 +1,4 @@
-package edu.s3.qmood4j.parser;
+package edu.s3.qmood4j.runner;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

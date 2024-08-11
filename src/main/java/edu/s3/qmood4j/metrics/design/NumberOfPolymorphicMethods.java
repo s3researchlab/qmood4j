@@ -1,11 +1,11 @@
-package edu.s3.qmood4j.calculator.metrics.design;
+package edu.s3.qmood4j.metrics.design;
 
 import java.util.Set;
 
 import edu.s3.jqmood.model.ClassModel;
 import edu.s3.jqmood.model.MethodModel;
 import edu.s3.jqmood.model.ProjectModel;
-import edu.s3.qmood4j.calculator.metrics.MetricProperty;
+import edu.s3.qmood4j.metrics.MetricProperty;
 
 /**
  * Number of Polymorphic Methods (NOP)

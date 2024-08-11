@@ -1,7 +1,7 @@
-package edu.s3.qmood4j.calculator.metrics.design;
+package edu.s3.qmood4j.metrics.design;
 
 import edu.s3.jqmood.model.ProjectModel;
-import edu.s3.qmood4j.calculator.metrics.MetricProperty;
+import edu.s3.qmood4j.metrics.MetricProperty;
 
 /**
  * Design Size in Classes (DSC)

@@ -4,20 +4,20 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>edu.s3.jqmood</groupId>
-    <artifactId>jqmood</artifactId>
+    <groupId>edu.s3.qmood4j</groupId>
+    <artifactId>qmood4j</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
-    <name>jQMOOD</name>
-    <description>Tool for assessing object-oriented projects</description>
+    <name>QMOOD4J</name>
+    <description>Tool for assessing object-oriented projects using QMOOD metrics</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>22</java.version>
         <maven.compiler.target>22</maven.compiler.target>
         <maven.compiler.source>22</maven.compiler.source>
-        <main.class>edu.s3.jqmood.Explorer</main.class>
+        <main.class>edu.s3.qmood4j.MainClass</main.class>
     </properties>
 
     <dependencies>

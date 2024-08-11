@@ -1,4 +1,4 @@
-package edu.s3.qmood4j.calculator.metrics;
+package edu.s3.qmood4j.metrics;
 
 public interface Metric {
 

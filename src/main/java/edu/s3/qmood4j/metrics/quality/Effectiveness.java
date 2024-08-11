@@ -1,7 +1,7 @@
-package edu.s3.qmood4j.calculator.metrics.quality;
+package edu.s3.qmood4j.metrics.quality;
 
-import edu.s3.qmood4j.calculator.MetricValues;
-import edu.s3.qmood4j.calculator.metrics.MetricProperty;
+import edu.s3.qmood4j.metrics.MetricProperty;
+import edu.s3.qmood4j.metrics.MetricValues;
 
 public class Effectiveness implements QualityMetric {
 

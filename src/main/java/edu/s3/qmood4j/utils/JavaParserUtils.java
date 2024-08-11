@@ -7,7 +7,7 @@ import com.github.javaparser.resolution.UnsolvedSymbolException;
 import com.github.javaparser.resolution.types.ResolvedType;
 import com.github.javaparser.resolution.types.ResolvedTypeVariable;
 
-import edu.s3.qmood4j.parser.UnResolvedType;
+import edu.s3.qmood4j.runner.UnResolvedType;
 
 public class JavaParserUtils {
 

@@ -1,4 +1,4 @@
-package edu.s3.qmood4j.parser;
+package edu.s3.qmood4j.runner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,26 +7,26 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.s3.jqmood.model.ProjectModel;
-import edu.s3.qmood4j.calculator.MetricValues;
-import edu.s3.qmood4j.calculator.metrics.design.AverageNumberOfAncestors;
-import edu.s3.qmood4j.calculator.metrics.design.ClassInterfaceSize;
-import edu.s3.qmood4j.calculator.metrics.design.CohesionAmongMethodsOfClass;
-import edu.s3.qmood4j.calculator.metrics.design.DataAccessMetrics;
-import edu.s3.qmood4j.calculator.metrics.design.DesignMetric;
-import edu.s3.qmood4j.calculator.metrics.design.DesignSizeInClasses;
-import edu.s3.qmood4j.calculator.metrics.design.DirectClassCoupling;
-import edu.s3.qmood4j.calculator.metrics.design.MeasureOfAggregation;
-import edu.s3.qmood4j.calculator.metrics.design.MeasureOfFunctionalAbstraction;
-import edu.s3.qmood4j.calculator.metrics.design.NumberOfHierarchies;
-import edu.s3.qmood4j.calculator.metrics.design.NumberOfMethods;
-import edu.s3.qmood4j.calculator.metrics.design.NumberOfPolymorphicMethods;
-import edu.s3.qmood4j.calculator.metrics.quality.Effectiveness;
-import edu.s3.qmood4j.calculator.metrics.quality.Extendibility;
-import edu.s3.qmood4j.calculator.metrics.quality.Flexibility;
-import edu.s3.qmood4j.calculator.metrics.quality.Functionality;
-import edu.s3.qmood4j.calculator.metrics.quality.QualityMetric;
-import edu.s3.qmood4j.calculator.metrics.quality.Reusability;
-import edu.s3.qmood4j.calculator.metrics.quality.Understandability;
+import edu.s3.qmood4j.metrics.MetricValues;
+import edu.s3.qmood4j.metrics.design.AverageNumberOfAncestors;
+import edu.s3.qmood4j.metrics.design.ClassInterfaceSize;
+import edu.s3.qmood4j.metrics.design.CohesionAmongMethodsOfClass;
+import edu.s3.qmood4j.metrics.design.DataAccessMetrics;
+import edu.s3.qmood4j.metrics.design.DesignMetric;
+import edu.s3.qmood4j.metrics.design.DesignSizeInClasses;
+import edu.s3.qmood4j.metrics.design.DirectClassCoupling;
+import edu.s3.qmood4j.metrics.design.MeasureOfAggregation;
+import edu.s3.qmood4j.metrics.design.MeasureOfFunctionalAbstraction;
+import edu.s3.qmood4j.metrics.design.NumberOfHierarchies;
+import edu.s3.qmood4j.metrics.design.NumberOfMethods;
+import edu.s3.qmood4j.metrics.design.NumberOfPolymorphicMethods;
+import edu.s3.qmood4j.metrics.quality.Effectiveness;
+import edu.s3.qmood4j.metrics.quality.Extendibility;
+import edu.s3.qmood4j.metrics.quality.Flexibility;
+import edu.s3.qmood4j.metrics.quality.Functionality;
+import edu.s3.qmood4j.metrics.quality.QualityMetric;
+import edu.s3.qmood4j.metrics.quality.Reusability;
+import edu.s3.qmood4j.metrics.quality.Understandability;
 import edu.s3.qmood4j.utils.LoggerUtils;
 
 public class CodeCalculator {

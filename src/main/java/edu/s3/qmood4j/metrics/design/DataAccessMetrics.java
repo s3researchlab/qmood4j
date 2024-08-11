@@ -1,9 +1,9 @@
-package edu.s3.qmood4j.calculator.metrics.design;
+package edu.s3.qmood4j.metrics.design;
 
 import edu.s3.jqmood.model.ClassModel;
 import edu.s3.jqmood.model.ProjectModel;
 import edu.s3.jqmood.model.VariableModel;
-import edu.s3.qmood4j.calculator.metrics.MetricProperty;
+import edu.s3.qmood4j.metrics.MetricProperty;
 
 /**
  * Data Access Metrics (DAM)

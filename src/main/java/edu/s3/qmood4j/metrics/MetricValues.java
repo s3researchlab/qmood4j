@@ -1,8 +1,6 @@
-package edu.s3.qmood4j.calculator;
+package edu.s3.qmood4j.metrics;
 
 import java.util.HashMap;
-
-import edu.s3.qmood4j.calculator.metrics.MetricProperty;
 
 public class MetricValues extends HashMap<MetricProperty, Double> {
 

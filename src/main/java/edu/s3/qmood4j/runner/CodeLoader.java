@@ -1,4 +1,4 @@
-package edu.s3.qmood4j.parser;
+package edu.s3.qmood4j.runner;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
