@@ -85,10 +85,6 @@ public class FileUtils {
             new RuntimeException(e);
         }
     }
-//    
-//    public static void deleteFilees(Path folder) {
-//        FileUtils.deleteDirectory(file);
-//    }
 
     public static void deleteFolderRecursively(Path folder) {
 
