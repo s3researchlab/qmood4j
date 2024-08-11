@@ -86,9 +86,9 @@ public class MainClass implements Callable<Integer> {
 
         loader.setAlwaysDownload(alwaysDownload);
 
-        for (String ignore : FileUtils.readIgnoreFile(ignoreFile)) {
-            loader.addIgnored(ignore);
-        }
+//        for (String ignore : FileUtils.readIgnoreFile(ignoreFile)) {
+//            loader.addIgnored(ignore);
+//        }
 
         loader.load();
 

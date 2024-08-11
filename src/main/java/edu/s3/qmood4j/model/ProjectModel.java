@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.google.common.graph.GraphBuilder;
@@ -16,6 +19,8 @@ import edu.s3.qmood4j.utils.GraphUtils;
 
 public class ProjectModel {
 
+    private static Logger logger = LogManager.getLogger(ProjectModel.class);
+    
     public Path path;
 
     private Map<String, ClassModel> classModels = new HashMap<>();
@@ -40,8 +45,7 @@ public class ProjectModel {
                 GraphUtils.addEdgeIfNotExist(extendsGraph, fullClassName, extendedFullClassName);
 
             } catch (Exception ex) {
-                System.out.println("oiii");
-                // Ignore classes from third-party libraries
+                logger.error("Exception thrown", ex);
             }
         }
 
