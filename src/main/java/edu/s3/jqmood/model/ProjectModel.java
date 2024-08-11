@@ -12,7 +12,7 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.MutableGraph;
 
-import edu.s3.jqmood.utils.GraphUtils;
+import edu.s3.qmood4j.utils.GraphUtils;
 
 public class ProjectModel {
 

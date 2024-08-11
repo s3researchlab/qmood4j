@@ -2,8 +2,7 @@
 <Configuration packages="edu.s3.jqmood">
     <Appenders>
         <Console name="stdout" target="SYSTEM_OUT">
-            <!--<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%-5p] %m%n" />-->
-             <PatternLayout pattern="[%p] %m%n" />
+            <PatternLayout pattern="[%-5p] %m%n" />
         </Console>
     </Appenders>
     <Loggers>

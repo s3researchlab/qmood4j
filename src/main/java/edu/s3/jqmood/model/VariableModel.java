@@ -4,8 +4,8 @@ import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.resolution.types.ResolvedType;
 
-import edu.s3.jqmood.parser.UnResolvedType;
-import edu.s3.jqmood.utils.JavaParserUtils;
+import edu.s3.qmood4j.parser.UnResolvedType;
+import edu.s3.qmood4j.utils.JavaParserUtils;
 
 public class VariableModel {
 
