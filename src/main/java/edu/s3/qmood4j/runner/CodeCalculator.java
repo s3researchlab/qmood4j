@@ -38,7 +38,7 @@ public class CodeCalculator {
     private static Logger logger = LogManager.getLogger(CodeCalculator.class);
 
     private ProjectModel projectModel;
-    
+
     private Path outputFile;
 
     private List<DesignMetric> designMetrics = new ArrayList<>();
@@ -84,9 +84,9 @@ public class CodeCalculator {
     public Map<MetricProperty, Double> getQualityValues() {
         return this.qualityValues;
     }
-    
+
     public void setOutputFile(Path outputFile) {
-        this.outputFile = outputFile; 
+        this.outputFile = outputFile;
     }
 
     public void calculate() {
@@ -111,23 +111,23 @@ public class CodeCalculator {
         logger.info("Completed");
         logger.info("");
         logger.info(LoggerUtils.title("Metrics"));
-        
+
         logger.info("");
         logger.info("Design Metrics");
         logger.info("");
-        
+
         designValues.forEach((key, value) -> {
-           logger.info("%s=%s".formatted(key, value));
+            logger.info("%s=%s".formatted(key, value));
         });
 
         logger.info("");
         logger.info("Quality Metrics");
         logger.info("");
-        
+
         qualityValues.forEach((key, value) -> {
             logger.info("%s=%s".formatted(key, value));
         });
-        
+
         savingToFile();
     }
 
@@ -139,17 +139,17 @@ public class CodeCalculator {
         StringBuilder builder = new StringBuilder();
 
         builder.append("# Design Metrics\n");
-        
+
         designValues.forEach((key, value) -> {
             builder.append("%s=%s\n".formatted(key, value));
         });
 
         builder.append("# Quality Metrics\n");
-        
+
         qualityValues.forEach((key, value) -> {
             builder.append("%s=%s\n".formatted(key, value));
         });
-        
+
         FileUtils.write(outputFile, builder.toString());
 
         logger.info("");
