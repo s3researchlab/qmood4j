@@ -33,13 +33,25 @@ public class CodeParser {
     public static final DataKey<Path> PATH = new DataKey<>() {
     };
 
+    private List<Path> files;
+
     private List<Path> libraries = new ArrayList<>();
+
+    private ProjectModel pm = new ProjectModel();
+
+    public CodeParser(List<Path> files) {
+        this.files = files;
+    }
 
     public void addLibraries(Path library) {
         this.libraries.add(library);
     }
 
-    public ProjectModel parse(List<Path> files) throws IOException {
+    public ProjectModel getProjectModel() {
+        return this.pm;
+    }
+
+    public void parse() throws IOException {
 
         logger.info("");
         logger.info(LoggerUtils.separator);
@@ -48,7 +60,7 @@ public class CodeParser {
 
         StaticJavaParser.getParserConfiguration().setCharacterEncoding(StandardCharsets.UTF_8);
         StaticJavaParser.getParserConfiguration().setSymbolResolver(getSymbolResolver());
-        
+
         logger.info("");
         logger.info(LoggerUtils.title("Parsing all java files"));
         logger.debug("");
@@ -70,7 +82,7 @@ public class CodeParser {
                 public void visit(ClassOrInterfaceDeclaration clsDecl, Void v) {
 
                     clsDecl.setData(PATH, file);
-                    
+
                     if (clsDecl.isTopLevelType()) {
                         output.add(clsDecl);
                     } else {
@@ -112,11 +124,11 @@ public class CodeParser {
                         clsDecl.getData(PATH));
             }
         }
-        
+
         logger.info("");
         logger.info(LoggerUtils.title("Resolving all java files"));
         logger.debug("");
-        
+
         ProjectModel pm = new ProjectModel();
 
         for (int i = 0; i < output.size(); i++) {
@@ -127,7 +139,7 @@ public class CodeParser {
 
             logger.debug("({}/{}) Resolving '{}' from {}", i + 1, output.size(), clsDecl.getNameAsString(), file);
 
-            pm.addClassModel(clsDecl);
+            this.pm.addClassModel(clsDecl);
         }
 
         logger.info("");
@@ -135,10 +147,8 @@ public class CodeParser {
         logger.info("");
         logger.info("Classes: {}, Interfaces: {}", pm.getNumberOfClasses(), pm.getNumberOfInterfaces());
         logger.info("");
-        
-        return pm;
     }
-    
+
     /**
      * It returns a combined type solver by taking into account new libraries (it
      * could could be folders with source codes or third-party .jar libraries)

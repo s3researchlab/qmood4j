@@ -12,8 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
-import edu.s3.qmood4j.metrics.MetricValues;
-import edu.s3.qmood4j.model.ProjectModel;
 import edu.s3.qmood4j.runner.CodeCalculator;
 import edu.s3.qmood4j.runner.CodeLoader;
 import edu.s3.qmood4j.runner.CodeParser;
@@ -36,7 +34,7 @@ public class MainClass implements Callable<Integer> {
     protected Path folder;
     
     @Option(names = { "-o", "--output" }, description = "the output file with qmood metrics")
-    protected Path output = FileUtils.getCurrentFolder().resolve("qmood.properties");
+    protected Path outputFile = FileUtils.getCurrentFolder().resolve("qmood.properties");
 
     @Option(names = { "-d", "--debug" }, description = "enable the debugging mode")
     protected boolean debug = false;
@@ -91,17 +89,18 @@ public class MainClass implements Callable<Integer> {
 
         loader.load();
 
-        CodeParser parser = new CodeParser();
+        CodeParser parser = new CodeParser(loader.getJavaFiles());
 
         for (Path dependencyFile : loader.getDependencyFiles()) {
             parser.addLibraries(dependencyFile);
         }
 
-        ProjectModel pm = parser.parse(loader.getJavaFiles());
+        parser.parse();
 
-        CodeCalculator calculator = new CodeCalculator(pm);
+        CodeCalculator calculator = new CodeCalculator(parser.getProjectModel());
       
-        calculator.setOutputFile(output);;
+        calculator.setOutputFile(outputFile);
+        
         calculator.calculate();
         
         logger.info("");
