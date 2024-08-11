@@ -67,9 +67,9 @@ public class MainClass implements Callable<Integer> {
         checkArgument(Files.exists(folder), "folder should exists");
 
         if (debug) {
-            Configurator.setRootLevel(Level.DEBUG);
+            Configurator.setAllLevels(LogManager.getRootLogger().getName(), Level.DEBUG);
         } else {
-            Configurator.setRootLevel(Level.INFO);
+            Configurator.setAllLevels(LogManager.getRootLogger().getName(), Level.INFO);
         }
 
         logger.info("Scanning project...");
