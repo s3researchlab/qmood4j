@@ -6,7 +6,7 @@
 
     <groupId>edu.s3.qmood4j</groupId>
     <artifactId>qmood4j</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>QMOOD4J</name>
@@ -19,6 +19,18 @@
         <maven.compiler.source>22</maven.compiler.source>
         <main.class>edu.s3.qmood4j.MainClass</main.class>
     </properties>
+
+    <developers>
+        <developer>
+            <name>Thiago Ferreira</name>
+            <organizationUrl>http://github.com/thiagodnf</organizationUrl>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>S3 Research Lab</name>
+        <url>http://github.com/s3researchlab</url>
+    </organization>
 
     <dependencies>
         <!-- Java Parser-->
@@ -73,20 +85,57 @@
 
     <build>
         <plugins>
+            <!-- JavaDoc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <additionalparam>${javadoc.opts}</additionalparam>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.3.0</version>
             </plugin>
             <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
+                <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <archive>
-                        <manifestEntries>
-                            <Implementation-Version>${this.version}</Implementation-Version>
-                        </manifestEntries>
+                        <manifest>
+                            <mainClass>${main.class}</mainClass>
+                        </manifest>
                     </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 

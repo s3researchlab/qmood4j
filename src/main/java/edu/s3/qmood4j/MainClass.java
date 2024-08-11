@@ -65,8 +65,7 @@ public class MainClass implements Callable<Integer> {
 
         checkNotNull(folder, "folder should not be null");
         checkArgument(Files.exists(folder), "folder should exists");
-        checkArgument(Files.exists(ignoreFile), "ignore file should exists");
-
+        
         if (debug) {
             Configurator.setRootLevel(Level.DEBUG);
         } else {
