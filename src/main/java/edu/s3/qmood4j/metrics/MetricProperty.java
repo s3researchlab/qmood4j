@@ -4,56 +4,49 @@ public enum MetricProperty {
 
     // Design Metrics
 
-    DESIGN_SIZE(MetricType.DESIGN, "DSC"),
+    DESIGN_SIZE("DSC"),
 
-    HIERARCHIES(MetricType.DESIGN, "NOH"),
+    HIERARCHIES("NOH"),
 
-    ABSTRACTION(MetricType.DESIGN, "ANA"),
+    ABSTRACTION("ANA"),
 
-    POLYMORPHISM(MetricType.DESIGN, "NOP"),
+    POLYMORPHISM("NOP"),
 
-    MESSAGING(MetricType.DESIGN, "CIS"),
+    MESSAGING("CIS"),
 
-    COMPLEXITY(MetricType.DESIGN, "NOM"),
+    COMPLEXITY("NOM"),
 
-    ENCAPSULATION(MetricType.DESIGN, "DAM"),
+    ENCAPSULATION("DAM"),
 
-    COUPLING(MetricType.DESIGN, "DCC"),
+    COUPLING("DCC"),
 
-    COHESION(MetricType.DESIGN, "CAM"),
+    COHESION("CAM"),
 
-    COMPOSITION(MetricType.DESIGN, "MOA"),
+    COMPOSITION("MOA"),
 
-    INHERITANCE(MetricType.DESIGN, "MFA"),
+    INHERITANCE("MFA"),
 
     // Quality Metrics
 
-    REUSABILITY(MetricType.QUALITY, "REUSABILITY"),
+    REUSABILITY("REUSABILITY"),
 
-    FLEXIBILITY(MetricType.QUALITY, "FLEXIBILITY"),
+    FLEXIBILITY("FLEXIBILITY"),
 
-    UNDERSTANDABILITY(MetricType.QUALITY, "UNDERSTANDABILITY"),
+    UNDERSTANDABILITY("UNDERSTANDABILITY"),
 
-    FUNCTIONALITY(MetricType.QUALITY, "FUNCTIONALITY"),
+    FUNCTIONALITY("FUNCTIONALITY"),
 
-    EXTENDIBILITY(MetricType.QUALITY, "EXTENDIBILITY"),
+    EXTENDIBILITY("EXTENDIBILITY"),
 
-    EFFECTIVENESS(MetricType.QUALITY, "EFFECTIVENESS");
-
-    private final MetricType type;
+    EFFECTIVENESS("EFFECTIVENESS");
 
     private final String acronym;
 
-    private MetricProperty(MetricType type, String acronym) {
-        this.type = type;
+    private MetricProperty(String acronym) {
         this.acronym = acronym;
     }
 
     public String getAcronym() {
         return this.acronym;
-    }
-
-    public MetricType getType() {
-        return this.type;
     }
 }
