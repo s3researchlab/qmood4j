@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration packages="edu.s3.jqmood">
+<Configuration packages="edu.s3.qmood4j">
     <Appenders>
         <Console name="stdout" target="SYSTEM_OUT">
             <PatternLayout pattern="[%-5p] %m%n" />
