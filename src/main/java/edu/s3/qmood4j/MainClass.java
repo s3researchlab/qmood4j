@@ -32,7 +32,7 @@ public class MainClass implements Callable<Integer> {
     @NotNull(message = "folder cannot be null")
     @Parameters(paramLabel = "folder", description = "the project's source code")
     protected Path folder;
-    
+
     @Option(names = { "-o", "--output" }, description = "the output file with qmood metrics")
     protected Path outputFile = FileUtils.getCurrentFolder().resolve("qmood.properties");
 
@@ -65,7 +65,7 @@ public class MainClass implements Callable<Integer> {
 
         checkNotNull(folder, "folder should not be null");
         checkArgument(Files.exists(folder), "folder should exists");
-        
+
         if (debug) {
             Configurator.setRootLevel(Level.DEBUG);
         } else {
@@ -75,8 +75,12 @@ public class MainClass implements Callable<Integer> {
         logger.info("Scanning project...");
         logger.info("");
         logger.info("Folder: {}", folder);
-        logger.info("Ignore File: {}", ignoreFile);
         logger.info("");
+
+        if (Files.exists(ignoreFile)) {
+            logger.info("Ignore File: {}", ignoreFile);
+            logger.info("");
+        }
 
         CodeLoader loader = new CodeLoader(folder);
 
@@ -97,11 +101,11 @@ public class MainClass implements Callable<Integer> {
         parser.parse();
 
         CodeCalculator calculator = new CodeCalculator(parser.getProjectModel());
-      
+
         calculator.setOutputFile(outputFile);
-        
+
         calculator.calculate();
-        
+
         logger.info("");
         logger.info(LoggerUtils.separator);
         logger.info(LoggerUtils.green("SUCCESS"));
