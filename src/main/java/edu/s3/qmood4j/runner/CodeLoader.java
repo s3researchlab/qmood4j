@@ -83,7 +83,7 @@ public class CodeLoader {
 
     private void downloadMavenDependencies() {
 
-        List<Path> pomFiles = FileUtils.getFilesFromFolder(folder, ignored, "pom.xml");
+        List<Path> pomFiles = FileUtils.getFilesFromFolder(folder, ignored, "/pom.xml");
 
         for (Path pomFile : pomFiles) {
 
