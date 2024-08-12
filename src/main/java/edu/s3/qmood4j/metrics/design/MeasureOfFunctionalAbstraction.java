@@ -33,7 +33,7 @@ public class MeasureOfFunctionalAbstraction extends DesignMetric {
 
             declared++;
         }
-
+        
         for (ClassModel superClass : pm.getSuperClassModels(cm)) {
 
             // Super class coming from third party library is ignored.

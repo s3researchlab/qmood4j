@@ -57,8 +57,6 @@ public class CohesionAmongMethodsOfClass extends DesignMetric {
             sumIntersection += types.size();
         }
 
-        System.out.println(cm.getFullClassName() + " -> " + sumIntersection);
-
         return sumIntersection;
     }
 }
