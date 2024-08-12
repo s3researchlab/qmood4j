@@ -10,7 +10,9 @@ import java.util.concurrent.Callable;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import edu.s3.qmood4j.runner.CodeCalculator;
 import edu.s3.qmood4j.runner.CodeLoader;
@@ -67,9 +69,9 @@ public class MainClass implements Callable<Integer> {
         checkArgument(Files.exists(folder), "folder should exists");
 
         if (debug) {
-            Configurator.setAllLevels(LogManager.getRootLogger().getName(), Level.DEBUG);
+            LoggerUtils.setLevel(Level.DEBUG);
         } else {
-            Configurator.setAllLevels(LogManager.getRootLogger().getName(), Level.INFO);
+            LoggerUtils.setLevel(Level.INFO);
         }
 
         logger.info("Scanning project...");

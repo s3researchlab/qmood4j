@@ -1,5 +1,11 @@
 package edu.s3.qmood4j.utils;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
+
 import com.google.common.base.Strings;
 
 public class LoggerUtils {
@@ -52,9 +58,20 @@ public class LoggerUtils {
 
         return "%s%s%s".formatted(color, text, RESET);
     }
-    
+
     public static String green(String text) {
 
         return color(text, GREEN);
+    }
+
+    public static void setLevel(Level level) {
+
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        Configuration config = ctx.getConfiguration();
+        LoggerConfig log = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME); 
+
+        log.setLevel(level);
+
+        ctx.updateLoggers();
     }
 }
