@@ -21,7 +21,7 @@ public class CodeLoader {
 
     private boolean alwaysDownload = false;
 
-    private List<String> ignored = new ArrayList<>();
+    private List<String> ignore = new ArrayList<>();
 
     private List<Path> javaFiles = new ArrayList<>();
 
@@ -31,20 +31,24 @@ public class CodeLoader {
 
         this.folder = folder;
 
-        this.addIgnored(".*module-info.java");
-        this.addIgnored(".*package-info.java");
-        this.addIgnored(".*/target/?.*");
-        this.addIgnored(".*/src/test/java/.*");
-        this.addIgnored(".*Test.java");
+        this.addIgnore(".*module-info.java");
+        this.addIgnore(".*package-info.java");
+        this.addIgnore(".*/target/?.*");
+        this.addIgnore(".*/src/test/java/.*");
+        this.addIgnore(".*Test.java");
     }
 
     public void setAlwaysDownload(boolean alwaysDownload) {
         this.alwaysDownload = alwaysDownload;
     }
 
-    public void addIgnored(String pattern) {
+    public void addIgnore(String pattern) {
 
-        this.ignored.add(pattern);
+        if (pattern == null || pattern.trim().isEmpty()) {
+            return;
+        }
+        
+        this.ignore.add(pattern);
     }
 
     public List<Path> getJavaFiles() {
@@ -66,11 +70,11 @@ public class CodeLoader {
         logger.info("Ignoring the following patterns");
         logger.info("");
 
-        for (int i = 0; i < ignored.size(); i++) {
+        for (int i = 0; i < ignore.size(); i++) {
 
-            String pattern = ignored.get(i);
+            String pattern = ignore.get(i);
 
-            logger.info("({}/{}) Pattern ignored: {}", i + 1, ignored.size(), pattern);
+            logger.info("({}/{}) Pattern ignored: {}", i + 1, ignore.size(), pattern);
         }
 
         logger.info("");
@@ -83,7 +87,7 @@ public class CodeLoader {
 
     private void downloadMavenDependencies() {
 
-        List<Path> pomFiles = FileUtils.getFilesFromFolder(folder, ignored, "/pom.xml");
+        List<Path> pomFiles = FileUtils.getFilesFromFolder(folder, ignore, "/pom.xml");
 
         for (Path pomFile : pomFiles) {
 
@@ -113,7 +117,7 @@ public class CodeLoader {
         logger.info("");
         logger.info(LoggerUtils.title("Loading .java files"));
 
-        this.javaFiles.addAll(FileUtils.getFilesFromFolder(this.folder, this.ignored, ".java"));
+        this.javaFiles.addAll(FileUtils.getFilesFromFolder(this.folder, this.ignore, ".java"));
 
         logger.info("");
         logger.info("Completed");
@@ -126,7 +130,7 @@ public class CodeLoader {
         logger.info("");
         logger.info(LoggerUtils.title("Loading .jar dependency files"));
 
-        this.dependencyFiles.addAll(FileUtils.getFilesFromFolder(this.folder, ignored, ".jar"));
+        this.dependencyFiles.addAll(FileUtils.getFilesFromFolder(this.folder, ignore, ".jar"));
 
         logger.info("");
         logger.info("Completed");
