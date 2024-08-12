@@ -27,14 +27,6 @@ public class MavenUtils {
         throw new UnsupportedOperationException("This class cannot be instantiated");
     }
 
-    public static boolean isParentProject(Model model) {
-        return model.getPackaging().equalsIgnoreCase("pom");
-    }
-
-    public static boolean isMaven(Path folder) {
-        return Files.exists(folder.resolve("pom.xml"));
-    }
-
     public static Model readPomFile(Path pomFile) {
 
         checkNotNull(pomFile);
