@@ -53,16 +53,16 @@ public class CodeParser {
 
     public void parse() throws IOException {
 
-        logger.info("");
-        logger.info(LoggerUtils.separator);
-        logger.info(LoggerUtils.green("Code Parser"));
-        logger.info(LoggerUtils.separator);
+        logger.debug("");
+        logger.debug(LoggerUtils.separator);
+        logger.debug(LoggerUtils.green("Code Parser"));
+        logger.debug(LoggerUtils.separator);
 
         StaticJavaParser.getParserConfiguration().setCharacterEncoding(StandardCharsets.UTF_8);
         StaticJavaParser.getParserConfiguration().setSymbolResolver(getSymbolResolver());
 
-        logger.info("");
-        logger.info(LoggerUtils.title("Parsing all java files"));
+        logger.debug("");
+        logger.debug(LoggerUtils.title("Parsing all java files"));
         logger.debug("");
 
         List<ClassOrInterfaceDeclaration> output = new ArrayList<>();
@@ -105,10 +105,10 @@ public class CodeParser {
             }, null);
         }
 
-        logger.info("");
-        logger.info("Completed");
-        logger.info("");
-        logger.info("Class/Interface Declarations: {}, Ignored: {}", output.size(), ignored.size());
+        logger.debug("");
+        logger.debug("Completed");
+        logger.debug("");
+        logger.debug("Class/Interface Declarations: {}, Ignored: {}", output.size(), ignored.size());
 
         if (!ignored.isEmpty()) {
 
@@ -125,8 +125,8 @@ public class CodeParser {
             }
         }
 
-        logger.info("");
-        logger.info(LoggerUtils.title("Resolving all java files"));
+        logger.debug("");
+        logger.debug(LoggerUtils.title("Resolving all java files"));
         logger.debug("");
 
         for (int i = 0; i < output.size(); i++) {
@@ -140,11 +140,11 @@ public class CodeParser {
             this.pm.addClassModel(clsDecl);
         }
 
-        logger.info("");
-        logger.info("Completed");
-        logger.info("");
-        logger.info("Classes: {}, Interfaces: {}", pm.getNumberOfClasses(), pm.getNumberOfInterfaces());
-        logger.info("");
+        logger.debug("");
+        logger.debug("Completed");
+        logger.debug("");
+        logger.debug("Classes: {}, Interfaces: {}", pm.getNumberOfClasses(), pm.getNumberOfInterfaces());
+        logger.debug("");
     }
 
     /**
@@ -157,8 +157,8 @@ public class CodeParser {
      */
     private static CombinedTypeSolver getCombinedTypeSolver(List<Path> libraries) throws IOException {
 
-        logger.info("");
-        logger.info("Setting up symbol resolvers");
+        logger.debug("");
+        logger.debug("Setting up symbol resolvers");
         logger.debug("");
 
         CombinedTypeSolver combinedTypeSolver = new CombinedTypeSolver();
@@ -183,10 +183,10 @@ public class CodeParser {
             }
         }
 
-        logger.info("");
-        logger.info("Completed");
-        logger.info("");
-        logger.info("Jar Files: {}, Folders: {}", jarsCounter, foldersCounter);
+        logger.debug("");
+        logger.debug("Completed");
+        logger.debug("");
+        logger.debug("Jar Files: {}, Folders: {}", jarsCounter, foldersCounter);
 
         return combinedTypeSolver;
     }

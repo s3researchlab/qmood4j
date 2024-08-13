@@ -67,12 +67,12 @@ public class MainClass implements Callable<Integer> {
 
         init();
 
-        logger.info("Scanning project...");
-        logger.info("");
-        logger.info("Folder: {}", folder);
-        logger.info("");
-        logger.info("Ignore File: {}", ignoreFile);
-        logger.info("");
+        logger.debug("Scanning project...");
+        logger.debug("");
+        logger.debug("Folder: {}", folder);
+        logger.debug("");
+        logger.debug("Ignore File: {}", ignoreFile);
+        logger.debug("");
       
         CodeLoader loader = new CodeLoader(folder);
 
@@ -98,10 +98,10 @@ public class MainClass implements Callable<Integer> {
 
         calculator.calculate();
 
-        logger.info("");
-        logger.info(LoggerUtils.separator);
-        logger.info(LoggerUtils.green("SUCCESS"));
-        logger.info(LoggerUtils.separator);
+        logger.debug("");
+        logger.debug(LoggerUtils.separator);
+        logger.debug(LoggerUtils.green("SUCCESS"));
+        logger.debug(LoggerUtils.separator);
 
         return null;
     }

@@ -63,22 +63,22 @@ public class CodeLoader {
 
     public void load() {
 
-        logger.info(LoggerUtils.separator);
-        logger.info(LoggerUtils.green("Code Loader"));
-        logger.info(LoggerUtils.separator);
-        logger.info("");
-        logger.info("Ignoring the following patterns");
-        logger.info("");
+        logger.debug(LoggerUtils.separator);
+        logger.debug(LoggerUtils.green("Code Loader"));
+        logger.debug(LoggerUtils.separator);
+        logger.debug("");
+        logger.debug("Ignoring the following patterns");
+        logger.debug("");
 
         for (int i = 0; i < ignore.size(); i++) {
 
             String pattern = ignore.get(i);
 
-            logger.info("({}/{}) Pattern ignored: {}", i + 1, ignore.size(), pattern);
+            logger.debug("({}/{}) Pattern ignored: {}", i + 1, ignore.size(), pattern);
         }
 
-        logger.info("");
-        logger.info("Completed ");
+        logger.debug("");
+        logger.debug("Completed ");
 
         this.downloadMavenDependencies();
         this.loadDependencyFiles();
@@ -114,28 +114,28 @@ public class CodeLoader {
 
     private void loadJavaFiles() {
 
-        logger.info("");
-        logger.info(LoggerUtils.title("Loading .java files"));
+        logger.debug("");
+        logger.debug(LoggerUtils.title("Loading .java files"));
 
         this.javaFiles.addAll(FileUtils.getFilesFromFolder(this.folder, this.ignore, ".java"));
 
-        logger.info("");
-        logger.info("Completed");
-        logger.info("");
-        logger.info("Java files found: {}", this.javaFiles.size());
+        logger.debug("");
+        logger.debug("Completed");
+        logger.debug("");
+        logger.debug("Java files found: {}", this.javaFiles.size());
     }
 
     private void loadDependencyFiles() {
 
-        logger.info("");
-        logger.info(LoggerUtils.title("Loading .jar dependency files"));
+        logger.debug("");
+        logger.debug(LoggerUtils.title("Loading .jar dependency files"));
 
         this.dependencyFiles.addAll(FileUtils.getFilesFromFolder(this.folder, ignore, ".jar"));
 
-        logger.info("");
-        logger.info("Completed");
-        logger.info("");
-        logger.info("Dependencies found: {}", this.dependencyFiles.size());
+        logger.debug("");
+        logger.debug("Completed");
+        logger.debug("");
+        logger.debug("Dependencies found: {}", this.dependencyFiles.size());
     }
 
 }
