@@ -129,8 +129,6 @@ public class CodeParser {
         logger.info(LoggerUtils.title("Resolving all java files"));
         logger.debug("");
 
-        ProjectModel pm = new ProjectModel();
-
         for (int i = 0; i < output.size(); i++) {
 
             ClassOrInterfaceDeclaration clsDecl = output.get(i);
