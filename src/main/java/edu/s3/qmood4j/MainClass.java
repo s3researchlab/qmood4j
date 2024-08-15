@@ -47,7 +47,7 @@ public class MainClass implements Callable<Integer> {
     @Option(names = { "-h", "--help" }, usageHelp = true, description = "display the help menu")
     protected boolean helpRequested = false;
 
-    @Option(names = { "-V", "--version" }, versionHelp = true, description = "print version information and exit")
+    @Option(names = { "-v", "--version" }, versionHelp = true, description = "print version information and exit")
     protected boolean versionRequested = false;
 
     public static void main(String[] args) {
