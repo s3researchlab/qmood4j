@@ -14,7 +14,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>22</java.version>
+        <!-- Always use the java version with Long Term Support (LTS) -->
+        <java.version>17</java.version>
         <main.class>edu.s3.qmood4j.MainClass</main.class>
     </properties>
 
