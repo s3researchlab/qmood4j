@@ -60,9 +60,8 @@ public class Settings implements IVersionProvider {
 
         ignores.add(".*module-info.java");
         ignores.add(".*package-info.java");
-        ignores.add(".*/target/?.*");
-        ignores.add(".*/src/test/java/.*");
-        ignores.add(".*Test.java");
+        ignores.add(".*/target/.*");
+        ignores.add(".*/test/.*");
 
         return ignores;
     }
