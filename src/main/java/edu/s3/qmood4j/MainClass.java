@@ -1,8 +1,5 @@
 package edu.s3.qmood4j;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
@@ -17,44 +14,61 @@ import edu.s3.qmood4j.runner.CodeParser;
 import edu.s3.qmood4j.settings.Settings;
 import edu.s3.qmood4j.utils.FileUtils;
 import edu.s3.qmood4j.utils.LoggerUtils;
-import jakarta.validation.constraints.NotNull;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.ParameterException;
 import picocli.CommandLine.Parameters;
+import picocli.CommandLine.Spec;
 
 @Command(sortOptions = false, versionProvider = Settings.class)
 public class MainClass implements Callable<Integer> {
 
     private static Logger logger = LogManager.getLogger(MainClass.class);
 
-    @NotNull(message = "folder cannot be null")
-    @Parameters(paramLabel = "folder", description = "the folder with the source code")
-    protected Path folder;
+    @Spec
+    CommandSpec spec;
+
+    private Path folder;
 
     @Option(names = { "-o",
             "--output" }, description = "the output file with qmood metrics (default: ${DEFAULT-VALUE})")
-    protected Path outputFile = FileUtils.getCurrentFolder().resolve("qmood.properties");
+    private Path outputFile = FileUtils.getCurrentFolder().resolve("qmood.properties");
 
     @Option(names = { "-a",
             "--always-download" }, description = "always download all dependencies (default: ${DEFAULT-VALUE})")
-    protected boolean alwaysDownload = false;
+    private boolean alwaysDownload = false;
 
     @Option(names = { "-i", "--ignore-file" }, description = "the path to the ignore file")
-    protected Path ignoreFile = null;
+    private Path ignoreFile = null;
 
     @Option(names = { "--help" }, usageHelp = true, description = "display the help menu")
-    protected boolean helpRequested = false;
+    private boolean helpRequested = false;
 
     @Option(names = { "--version" }, versionHelp = true, description = "print version information and exit")
-    protected boolean versionRequested = false;
+    private boolean versionRequested = false;
 
     @Option(names = { "--verbose" }, description = "enable debugging mode")
     public void setVerbose(boolean[] verbose) {
 
         if (verbose.length >= 1) {
             LoggerUtils.setLevel(Level.DEBUG);
-        } 
+        }
+    }
+
+    @Parameters(paramLabel = "folder", description = "the folder with the source code")
+    public void setFolder(Path folder) {
+
+        if (!Files.exists(folder)) {
+            throw new ParameterException(spec.commandLine(), "%s does not exists".formatted(folder));
+        }
+
+        if (!Files.isDirectory(folder)) {
+            throw new ParameterException(spec.commandLine(), "%s is not a folder".formatted(folder));
+        }
+
+        this.folder = folder;
     }
 
     public static void main(String[] args) {
@@ -70,9 +84,6 @@ public class MainClass implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-
-        checkNotNull(folder, "folder should not be null");
-        checkArgument(Files.exists(folder), "folder should exists");
 
         init();
 

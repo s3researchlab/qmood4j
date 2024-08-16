@@ -4,6 +4,7 @@ import java.util.Map;
 
 import edu.s3.qmood4j.metrics.Metric;
 import edu.s3.qmood4j.metrics.MetricName;
+import edu.s3.qmood4j.model.ProjectModel;
 
 public class Flexibility extends Metric {
 
@@ -12,7 +13,9 @@ public class Flexibility extends Metric {
     }
 
     @Override
-    public double calculate(Map<MetricName, Double> mv) {
+    public double calculate(ProjectModel pm) {
+
+        Map<MetricName, Double> mv = pm.getMetricValues();
 
         double encapsulation = mv.getOrDefault(MetricName.ENCAPSULATION, 0.0);
         double coupling = mv.getOrDefault(MetricName.COUPLING, 0.0);

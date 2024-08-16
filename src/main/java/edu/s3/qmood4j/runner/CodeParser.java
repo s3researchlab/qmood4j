@@ -149,11 +149,11 @@ public class CodeParser {
         int jarsCounter = 0;
         int foldersCounter = 0;
 
-        for (int i = 0; i < libraries.size(); i++) {
+        for (int i = 0; i < this.libraries.size(); i++) {
 
-            Path library = libraries.get(i);
+            Path library = this.libraries.get(i);
 
-            logger.debug("({}/{}) Adding resolver for {}", i + 1, libraries.size(), library);
+            logger.debug("({}/{}) Adding resolver for {}", i + 1, this.libraries.size(), library);
 
             if (library.toString().endsWith(".jar")) {
                 combinedTypeSolver.add(new JarTypeSolver(library));

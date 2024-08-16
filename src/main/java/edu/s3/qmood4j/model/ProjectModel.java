@@ -1,6 +1,6 @@
 package edu.s3.qmood4j.model;
 
-import java.nio.file.Path;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -15,20 +15,21 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.MutableGraph;
 
+import edu.s3.qmood4j.metrics.MetricName;
 import edu.s3.qmood4j.utils.GraphUtils;
 
 public class ProjectModel {
 
     private static Logger logger = LogManager.getLogger(ProjectModel.class);
     
-    public Path path;
-
     private Map<String, ClassModel> classModels = new HashMap<>();
 
     private Map<String, ClassModel> interfaceModels = new HashMap<>();
 
     private MutableGraph<String> extendsGraph = GraphBuilder.directed().build();
 
+    private Map<MetricName, Double> metricValues = new EnumMap<>(MetricName.class);
+    
     public void addClassModel(ClassOrInterfaceDeclaration clsDecl) {
         
         String fullClassName = clsDecl.getFullyQualifiedName().orElseThrow(() -> new RuntimeException("Class not found"));
@@ -58,17 +59,15 @@ public class ProjectModel {
             this.classModels.put(fullClassName, clsModel);
         }
     }
+    
+    public Map<MetricName, Double> getMetricValues() {
+        return this.metricValues;
+    }
 
-    /**
-     * @return the number of classes, excluding interfaces
-     */
     public int getNumberOfClasses() {
         return this.classModels.size();
     }
 
-    /**
-     * @return the number of interfaces, excluding classes
-     */
     public int getNumberOfInterfaces() {
         return this.interfaceModels.size();
     }

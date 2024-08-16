@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,45 +40,30 @@ public class CodeCalculator {
     private ProjectModel projectModel;
 
     private Path outputFile;
-    
-    private List<Metric> designMetrics = new ArrayList<>();
 
-    private List<Metric> qualityMetrics = new ArrayList<>();
-
-    private Map<MetricName, Double> designValues = new HashMap<>();
-
-    private Map<MetricName, Double> qualityValues = new HashMap<>();
+    private List<Metric> metrics = new ArrayList<>();
 
     public CodeCalculator(ProjectModel projectModel) {
 
         this.projectModel = projectModel;
 
-        this.designMetrics.add(new DesignSizeInClasses());
-        this.designMetrics.add(new NumberOfHierarchies());
-        this.designMetrics.add(new AverageNumberOfAncestors());
-        this.designMetrics.add(new DataAccessMetrics());
-        this.designMetrics.add(new DirectClassCoupling());
-        this.designMetrics.add(new CohesionAmongMethodsOfClass());
-        this.designMetrics.add(new MeasureOfAggregation());
-        this.designMetrics.add(new MeasureOfFunctionalAbstraction());
-        this.designMetrics.add(new NumberOfPolymorphicMethods());
-        this.designMetrics.add(new ClassInterfaceSize());
-        this.designMetrics.add(new NumberOfMethods());
-
-        this.qualityMetrics.add(new Reusability());
-        this.qualityMetrics.add(new Flexibility());
-        this.qualityMetrics.add(new Understandability());
-        this.qualityMetrics.add(new Functionality());
-        this.qualityMetrics.add(new Extendibility());
-        this.qualityMetrics.add(new Effectiveness());
-    }
-
-    public Map<MetricName, Double> getDesignValues() {
-        return this.designValues;
-    }
-
-    public Map<MetricName, Double> getQualityValues() {
-        return this.qualityValues;
+        this.metrics.add(new DesignSizeInClasses());
+        this.metrics.add(new NumberOfHierarchies());
+        this.metrics.add(new AverageNumberOfAncestors());
+        this.metrics.add(new DataAccessMetrics());
+        this.metrics.add(new DirectClassCoupling());
+        this.metrics.add(new CohesionAmongMethodsOfClass());
+        this.metrics.add(new MeasureOfAggregation());
+        this.metrics.add(new MeasureOfFunctionalAbstraction());
+        this.metrics.add(new NumberOfPolymorphicMethods());
+        this.metrics.add(new ClassInterfaceSize());
+        this.metrics.add(new NumberOfMethods());
+        this.metrics.add(new Reusability());
+        this.metrics.add(new Flexibility());
+        this.metrics.add(new Understandability());
+        this.metrics.add(new Functionality());
+        this.metrics.add(new Extendibility());
+        this.metrics.add(new Effectiveness());
     }
 
     public void setOutputFile(Path outputFile) {
@@ -86,51 +72,43 @@ public class CodeCalculator {
 
     public void calculate() {
 
-        LoggerUtils.section("Calculating design metrics");
-                
-        for (Metric metric : designMetrics) {
-            this.designValues.put(metric.getName(), metric.calculate(projectModel));
-        }
-        
-        LoggerUtils.section("Calculating quality metrics");
-        
-        for (Metric metric : qualityMetrics) {
-            qualityValues.put(metric.getName(), metric.calculate(designValues));
+        LoggerUtils.section("Calculating QMOOD metrics");
+
+        for (Metric metric : metrics) {
+            projectModel.getMetricValues().put(metric.getName(), metric.calculate(projectModel));
         }
 
-        designValues.forEach((key, value) -> {
-            logger.debug("%s = %s".formatted(key.getKey(), value));
+        Map<MetricName, Double> sortedMetricValues = new TreeMap<>(projectModel.getMetricValues());
+
+        sortedMetricValues.forEach((key, value) -> {
+            logger.debug("%s = %s".formatted(key, value));
         });
 
-        qualityValues.forEach((key, value) -> {
-            logger.debug("%s = %s".formatted(key.getKey(), value));
-        });
-
-        savingToFile();
+//        savingToFile();
     }
 
-    private void savingToFile() {
-
-        logger.debug("");
-        logger.debug(LoggerUtils.title("Saving metrics to output file"));
-
-        StringBuilder builder = new StringBuilder();
-
-        builder.append("# Design Metrics\n");
-
-        designValues.forEach((key, value) -> {
-            builder.append("%s=%s\n".formatted(key, value));
-        });
-
-        builder.append("# Quality Metrics\n");
-
-        qualityValues.forEach((key, value) -> {
-            builder.append("%s=%s\n".formatted(key, value));
-        });
-
-        FileUtils.write(outputFile, builder.toString());
-
-        logger.info("");
-        logger.info("Completed");
-    }
+//    private void savingToFile() {
+//
+//        logger.debug("");
+//        logger.debug(LoggerUtils.title("Saving metrics to output file"));
+//
+//        StringBuilder builder = new StringBuilder();
+//
+//        builder.append("# Design Metrics\n");
+//
+//        designValues.forEach((key, value) -> {
+//            builder.append("%s=%s\n".formatted(key, value));
+//        });
+//
+//        builder.append("# Quality Metrics\n");
+//
+//        qualityValues.forEach((key, value) -> {
+//            builder.append("%s=%s\n".formatted(key, value));
+//        });
+//
+//        FileUtils.write(outputFile, builder.toString());
+//
+//        logger.info("");
+//        logger.info("Completed");
+//    }
 }

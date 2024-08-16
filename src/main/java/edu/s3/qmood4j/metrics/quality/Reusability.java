@@ -4,6 +4,7 @@ import java.util.Map;
 
 import edu.s3.qmood4j.metrics.Metric;
 import edu.s3.qmood4j.metrics.MetricName;
+import edu.s3.qmood4j.model.ProjectModel;
 
 public class Reusability extends Metric {
 
@@ -12,7 +13,9 @@ public class Reusability extends Metric {
     }
 
     @Override
-    public double calculate(Map<MetricName, Double> mv) {
+    public double calculate(ProjectModel pm) {
+
+        Map<MetricName, Double> mv = pm.getMetricValues();
 
         double coupling = mv.getOrDefault(MetricName.COUPLING, 0.0);
         double cohesion = mv.getOrDefault(MetricName.COHESION, 0.0);

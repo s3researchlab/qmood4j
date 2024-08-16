@@ -4,16 +4,19 @@ import java.util.Map;
 
 import edu.s3.qmood4j.metrics.Metric;
 import edu.s3.qmood4j.metrics.MetricName;
+import edu.s3.qmood4j.model.ProjectModel;
 
 public class Effectiveness extends Metric {
 
     public MetricName getName() {
         return MetricName.EFFECTIVENESS;
     }
-
+    
     @Override
-    public double calculate(Map<MetricName, Double> mv) {
+    public double calculate(ProjectModel pm) {
 
+        Map<MetricName, Double> mv = pm.getMetricValues();
+        
         double abstraction = mv.getOrDefault(MetricName.ABSTRACTION, 0.0);
         double encapsulation = mv.getOrDefault(MetricName.ENCAPSULATION, 0.0);
         double composition = mv.getOrDefault(MetricName.COMPOSITION, 0.0);
