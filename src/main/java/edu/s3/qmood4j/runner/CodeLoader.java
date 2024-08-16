@@ -63,8 +63,8 @@ public class CodeLoader {
 
     public void load() {
 
-        LoggerUtils.section("Ignoring the following patterns:");
-        
+        LoggerUtils.section("Ignoring the following patterns");
+
         for (int i = 0; i < ignore.size(); i++) {
 
             String pattern = ignore.get(i);
@@ -79,10 +79,16 @@ public class CodeLoader {
 
     private void downloadMavenDependencies() {
 
+        LoggerUtils.section("Processing Maven dependencies");
+
         List<Path> pomFiles = getFilesFromFolder(folder, "/pom.xml");
 
-        for (Path pomFile : pomFiles) {
+        for (int i = 0; i < pomFiles.size(); i++) {
 
+            Path pomFile = pomFiles.get(i);
+            
+            logger.debug("({}/{}) Pom file: {}", i + 1, pomFiles.size(), pomFile);
+            
             Model model = MavenUtils.readPomFile(pomFile);
 
             Path pomFolder = pomFile.getParent();
@@ -114,7 +120,7 @@ public class CodeLoader {
     }
 
     private void loadDependencyFiles() {
-        
+
         LoggerUtils.section("Loading .jar dependency files");
 
         this.dependencyFiles.addAll(getFilesFromFolder(this.folder, ".jar"));
