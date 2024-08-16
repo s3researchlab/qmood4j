@@ -2,10 +2,10 @@ package edu.s3.qmood4j.metrics.quality;
 
 import java.util.Map;
 
+import edu.s3.qmood4j.metrics.Metric;
 import edu.s3.qmood4j.metrics.MetricName;
-import edu.s3.qmood4j.metrics.QualityMetric;
 
-public class Extendibility implements QualityMetric {
+public class Extendibility extends Metric {
 
     public MetricName getName() {
         return MetricName.EXTENDIBILITY;

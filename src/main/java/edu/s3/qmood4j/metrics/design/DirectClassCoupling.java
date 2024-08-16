@@ -3,7 +3,7 @@ package edu.s3.qmood4j.metrics.design;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.s3.qmood4j.metrics.DesignMetric;
+import edu.s3.qmood4j.metrics.Metric;
 import edu.s3.qmood4j.metrics.MetricName;
 import edu.s3.qmood4j.model.ClassModel;
 import edu.s3.qmood4j.model.MethodModel;
@@ -16,7 +16,7 @@ import edu.s3.qmood4j.model.VariableModel;
  * @author Thiago Ferreira
  * @since July 2024
  */
-public class DirectClassCoupling extends DesignMetric {
+public class DirectClassCoupling extends Metric {
 
     @Override
     public MetricName getName() {

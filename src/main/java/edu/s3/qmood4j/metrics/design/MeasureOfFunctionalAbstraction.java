@@ -1,6 +1,6 @@
 package edu.s3.qmood4j.metrics.design;
 
-import edu.s3.qmood4j.metrics.DesignMetric;
+import edu.s3.qmood4j.metrics.Metric;
 import edu.s3.qmood4j.metrics.MetricName;
 import edu.s3.qmood4j.model.ClassModel;
 import edu.s3.qmood4j.model.MethodModel;
@@ -12,7 +12,7 @@ import edu.s3.qmood4j.model.ProjectModel;
  * @author Thiago Ferreira
  * @since July 2024
  */
-public class MeasureOfFunctionalAbstraction extends DesignMetric {
+public class MeasureOfFunctionalAbstraction extends Metric {
 
     @Override
     public MetricName getName() {

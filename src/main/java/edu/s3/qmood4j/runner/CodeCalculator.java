@@ -9,9 +9,8 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.s3.qmood4j.metrics.DesignMetric;
+import edu.s3.qmood4j.metrics.Metric;
 import edu.s3.qmood4j.metrics.MetricName;
-import edu.s3.qmood4j.metrics.QualityMetric;
 import edu.s3.qmood4j.metrics.design.AverageNumberOfAncestors;
 import edu.s3.qmood4j.metrics.design.ClassInterfaceSize;
 import edu.s3.qmood4j.metrics.design.CohesionAmongMethodsOfClass;
@@ -41,9 +40,9 @@ public class CodeCalculator {
 
     private Path outputFile;
     
-    private List<DesignMetric> designMetrics = new ArrayList<>();
+    private List<Metric> designMetrics = new ArrayList<>();
 
-    private List<QualityMetric> qualityMetrics = new ArrayList<>();
+    private List<Metric> qualityMetrics = new ArrayList<>();
 
     private Map<MetricName, Double> designValues = new HashMap<>();
 
@@ -89,20 +88,15 @@ public class CodeCalculator {
 
         LoggerUtils.section("Calculating design metrics");
                 
-        for (DesignMetric metric : designMetrics) {
+        for (Metric metric : designMetrics) {
             this.designValues.put(metric.getName(), metric.calculate(projectModel));
         }
         
         LoggerUtils.section("Calculating quality metrics");
         
-        for (QualityMetric metric : qualityMetrics) {
+        for (Metric metric : qualityMetrics) {
             qualityValues.put(metric.getName(), metric.calculate(designValues));
         }
-
-        logger.debug("");
-        logger.debug("Completed");
-        logger.debug("");
-        logger.debug(LoggerUtils.title("Metrics"));
 
         designValues.forEach((key, value) -> {
             logger.debug("%s = %s".formatted(key.getKey(), value));

@@ -138,7 +138,7 @@ public class CodeParser {
      * @return a combined type solver with folders and jar libraries
      * @throws IOException some I/O errors happen
      */
-    private static CombinedTypeSolver getCombinedTypeSolver(List<Path> libraries) throws IOException {
+    private JavaSymbolSolver getSymbolResolver() throws IOException {
 
         LoggerUtils.section("Setting up symbol resolvers");
         
@@ -166,10 +166,6 @@ public class CodeParser {
 
         logger.debug("Completed. Jar Files: {}, Folders: {}", jarsCounter, foldersCounter);
 
-        return combinedTypeSolver;
-    }
-
-    private JavaSymbolSolver getSymbolResolver() throws IOException {
-        return new JavaSymbolSolver(getCombinedTypeSolver(libraries));
+        return new JavaSymbolSolver(combinedTypeSolver);
     }
 }
