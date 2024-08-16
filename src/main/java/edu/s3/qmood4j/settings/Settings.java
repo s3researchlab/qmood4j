@@ -16,7 +16,7 @@ public class Settings implements IVersionProvider {
     public static String tempFolderName = ".qmood4j";
 
     public static String ignoreFileName = ".ignore";
-    
+
     public static String outputFileName = "qmood4j.properties";
 
     public String[] getVersion() {
@@ -35,6 +35,10 @@ public class Settings implements IVersionProvider {
         return folder.resolve(tempFolderName);
     }
 
+    public static Path getIgnoreFile() {
+        return getTempFolder().resolve(ignoreFileName);
+    }
+
     public static void init() {
 
         Path tempFolder = folder.resolve(Settings.tempFolderName);
@@ -42,7 +46,7 @@ public class Settings implements IVersionProvider {
         if (!Files.exists(tempFolder)) {
             FileUtils.createFolder(tempFolder);
         }
-        
+
         Path ignoreFile = getTempFolder().resolve(ignoreFileName);
 
         if (!Files.exists(ignoreFile)) {

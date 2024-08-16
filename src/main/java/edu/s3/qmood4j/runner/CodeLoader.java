@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.model.Model;
 
+import edu.s3.qmood4j.settings.Settings;
 import edu.s3.qmood4j.utils.FileUtils;
 import edu.s3.qmood4j.utils.LoggerUtils;
 import edu.s3.qmood4j.utils.MavenUtils;
@@ -31,11 +32,18 @@ public class CodeLoader {
 
         this.folder = folder;
 
-        this.addIgnore(".*module-info.java");
-        this.addIgnore(".*package-info.java");
-        this.addIgnore(".*/target/?.*");
-        this.addIgnore(".*/src/test/java/.*");
-        this.addIgnore(".*Test.java");
+        logger.debug("Ignoring the following patterns");
+
+        List<String> patterns = FileUtils.readLines(Settings.getIgnoreFile());
+        
+        for (int i = 0; i < patterns.size(); i++) {
+
+            String pattern = patterns.get(i);
+
+            this.addIgnore(pattern);
+            
+            logger.debug("({}/{}) Pattern ignored: {}", i + 1, patterns.size(), pattern);
+        }
     }
 
     public void setAlwaysDownload(boolean alwaysDownload) {
@@ -62,16 +70,6 @@ public class CodeLoader {
     }
 
     public void load() {
-
-        LoggerUtils.section("Ignoring the following patterns");
-
-        for (int i = 0; i < ignore.size(); i++) {
-
-            String pattern = ignore.get(i);
-
-            logger.debug("({}/{}) Pattern ignored: {}", i + 1, ignore.size(), pattern);
-        }
-
         this.downloadMavenDependencies();
         this.loadDependencyFiles();
         this.loadJavaFiles();
@@ -86,9 +84,9 @@ public class CodeLoader {
         for (int i = 0; i < pomFiles.size(); i++) {
 
             Path pomFile = pomFiles.get(i);
-            
+
             logger.debug("({}/{}) Pom file: {}", i + 1, pomFiles.size(), pomFile);
-            
+
             Model model = MavenUtils.readPomFile(pomFile);
 
             Path pomFolder = pomFile.getParent();
