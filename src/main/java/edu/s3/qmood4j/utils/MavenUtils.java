@@ -50,8 +50,7 @@ public class MavenUtils {
 
         if (!Files.exists(jarsFolder)) {
             
-            logger.info("");
-            logger.info("Downloading .jar dependency files");
+            logger.debug("Downloading .jar dependency files");
 
             FileUtils.createFolder(jarsFolder);
 
@@ -68,8 +67,7 @@ public class MavenUtils {
                 }
             }
             
-            logger.info("");
-            logger.info("Completed ");
+            logger.debug("Completed ");
         }
     }
 
