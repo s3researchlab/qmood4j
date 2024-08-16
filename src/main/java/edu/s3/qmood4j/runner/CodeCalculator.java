@@ -2,7 +2,7 @@ package edu.s3.qmood4j.runner;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -30,7 +30,6 @@ import edu.s3.qmood4j.metrics.quality.Functionality;
 import edu.s3.qmood4j.metrics.quality.Reusability;
 import edu.s3.qmood4j.metrics.quality.Understandability;
 import edu.s3.qmood4j.model.ProjectModel;
-import edu.s3.qmood4j.utils.FileUtils;
 import edu.s3.qmood4j.utils.LoggerUtils;
 
 public class CodeCalculator {
@@ -74,17 +73,31 @@ public class CodeCalculator {
 
         LoggerUtils.section("Calculating QMOOD metrics");
 
-        for (Metric metric : metrics) {
+        for (int i = 0; i < metrics.size(); i++) {
+
+            Metric metric = metrics.get(i);
+            
             projectModel.getMetricValues().put(metric.getName(), metric.calculate(projectModel));
+            
+            logger.debug("({}/{}) Calculating values for {}", i + 1, metrics.size(), metric.getName().getKey());
         }
+        
+        LoggerUtils.section("Results");
 
-        Map<MetricName, Double> sortedMetricValues = new TreeMap<>(projectModel.getMetricValues());
+        Map<MetricName, Double> sortedMetricValues = new TreeMap<>(new Comparator<MetricName>() {
 
-        sortedMetricValues.forEach((key, value) -> {
-            logger.debug("%s = %s".formatted(key, value));
+            @Override
+            public int compare(MetricName m1, MetricName m2) {
+                return m1.getKey().compareToIgnoreCase(m2.getKey());
+            }
         });
 
-//        savingToFile();
+        sortedMetricValues.putAll(projectModel.getMetricValues());
+        
+        sortedMetricValues.forEach((key, value) -> {
+            logger.debug("%s = %s".formatted(key.getKey(), value));
+        });
+
     }
 
 //    private void savingToFile() {
