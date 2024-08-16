@@ -28,6 +28,7 @@ import edu.s3.qmood4j.metrics.quality.Extendibility;
 import edu.s3.qmood4j.metrics.quality.Flexibility;
 import edu.s3.qmood4j.metrics.quality.Functionality;
 import edu.s3.qmood4j.metrics.quality.Reusability;
+import edu.s3.qmood4j.metrics.quality.TotalQualityIndex;
 import edu.s3.qmood4j.metrics.quality.Understandability;
 import edu.s3.qmood4j.model.ProjectModel;
 import edu.s3.qmood4j.utils.LoggerUtils;
@@ -46,6 +47,7 @@ public class CodeCalculator {
 
         this.projectModel = projectModel;
 
+        // Design Metrics
         this.metrics.add(new DesignSizeInClasses());
         this.metrics.add(new NumberOfHierarchies());
         this.metrics.add(new AverageNumberOfAncestors());
@@ -57,12 +59,15 @@ public class CodeCalculator {
         this.metrics.add(new NumberOfPolymorphicMethods());
         this.metrics.add(new ClassInterfaceSize());
         this.metrics.add(new NumberOfMethods());
+        
+        // Quality Metrics
         this.metrics.add(new Reusability());
         this.metrics.add(new Flexibility());
         this.metrics.add(new Understandability());
         this.metrics.add(new Functionality());
         this.metrics.add(new Extendibility());
         this.metrics.add(new Effectiveness());
+        this.metrics.add(new TotalQualityIndex());
     }
 
     public void setOutputFile(Path outputFile) {

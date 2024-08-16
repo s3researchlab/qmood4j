@@ -34,7 +34,9 @@ public enum MetricName {
 
     EXTENDIBILITY("qmood.quality.extendibility"),
 
-    EFFECTIVENESS("qmood.quality.effectiveness");
+    EFFECTIVENESS("qmood.quality.effectiveness"),
+    
+    TQI("qmood.tqi");
 
     private final String key;
 
