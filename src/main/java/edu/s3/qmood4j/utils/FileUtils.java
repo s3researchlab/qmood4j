@@ -1,5 +1,7 @@
 package edu.s3.qmood4j.utils;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -134,7 +136,13 @@ public class FileUtils {
     }
 
     public static void write(Path outputFile, String content) {
-        
+
+        checkNotNull(outputFile);
+
+        if (content == null) {
+            content = "";
+        }
+
         try {
             Files.writeString(outputFile, content);
         } catch (IOException e) {

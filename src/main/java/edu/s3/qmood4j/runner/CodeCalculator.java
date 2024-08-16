@@ -1,6 +1,7 @@
 package edu.s3.qmood4j.runner;
 
 import java.nio.file.Path;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -31,6 +32,8 @@ import edu.s3.qmood4j.metrics.quality.Reusability;
 import edu.s3.qmood4j.metrics.quality.TotalQualityIndex;
 import edu.s3.qmood4j.metrics.quality.Understandability;
 import edu.s3.qmood4j.model.ProjectModel;
+import edu.s3.qmood4j.settings.Settings;
+import edu.s3.qmood4j.utils.FileUtils;
 import edu.s3.qmood4j.utils.LoggerUtils;
 
 public class CodeCalculator {
@@ -43,9 +46,10 @@ public class CodeCalculator {
 
     private List<Metric> metrics = new ArrayList<>();
 
-    public CodeCalculator(ProjectModel projectModel) {
+    public CodeCalculator(CodeParser parser, Path outputFile) {
 
-        this.projectModel = projectModel;
+        this.projectModel = parser.getProjectModel();
+        this.outputFile = outputFile;
 
         // Design Metrics
         this.metrics.add(new DesignSizeInClasses());
@@ -69,10 +73,6 @@ public class CodeCalculator {
         this.metrics.add(new Effectiveness());
         
         this.metrics.add(new TotalQualityIndex());
-    }
-
-    public void setOutputFile(Path outputFile) {
-        this.outputFile = outputFile;
     }
 
     public void calculate() {
@@ -100,34 +100,21 @@ public class CodeCalculator {
 
         sortedMetricValues.putAll(projectModel.getMetricValues());
         
+        StringBuilder builder = new StringBuilder();
+        
+        builder.append("# Folder: %s\n".formatted(Settings.folder));
+        builder.append("# %s\n".formatted(ZonedDateTime.now().toString()));
+        
         sortedMetricValues.forEach((key, value) -> {
-            System.out.println("%s = %s".formatted(key.getKey(), value));
+            builder.append("%s = %s\n".formatted(key.getKey(), value));
         });
-
+        
+        String content = builder.toString();
+        
+        if (outputFile != null) {
+            FileUtils.write(outputFile, content.toString());
+        }
+        
+        System.out.println(content);
     }
-
-//    private void savingToFile() {
-//
-//        logger.debug("");
-//        logger.debug(LoggerUtils.title("Saving metrics to output file"));
-//
-//        StringBuilder builder = new StringBuilder();
-//
-//        builder.append("# Design Metrics\n");
-//
-//        designValues.forEach((key, value) -> {
-//            builder.append("%s=%s\n".formatted(key, value));
-//        });
-//
-//        builder.append("# Quality Metrics\n");
-//
-//        qualityValues.forEach((key, value) -> {
-//            builder.append("%s=%s\n".formatted(key, value));
-//        });
-//
-//        FileUtils.write(outputFile, builder.toString());
-//
-//        logger.info("");
-//        logger.info("Completed");
-//    }
 }

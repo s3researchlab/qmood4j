@@ -33,15 +33,15 @@ public class MainClass implements Callable<Integer> {
     private Path folder;
 
     @Option(names = { "-o",
-            "--output" }, description = "the output file with qmood metrics (default: ${DEFAULT-VALUE})")
-    private Path outputFile = FileUtils.getCurrentFolder().resolve("qmood.properties");
-
-    @Option(names = { "-a",
-            "--always-download" }, description = "always download all dependencies (default: ${DEFAULT-VALUE})")
-    private boolean alwaysDownload = false;
+            "--output" }, description = "the output file with qmood metrics (default: /{folder}/qmood.properties")
+    private Path outputFile = null;
 
     @Option(names = { "-i", "--ignore-file" }, description = "the path to the ignore file")
     private Path ignoreFile = null;
+    
+    @Option(names = { "-a",
+            "--always-download" }, description = "always download all dependencies (default: ${DEFAULT-VALUE})")
+    private boolean alwaysDownload = false;
 
     @Option(names = { "--help" }, usageHelp = true, description = "display the help menu")
     private boolean helpRequested = false;
@@ -85,6 +85,8 @@ public class MainClass implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
+        Settings.folder = folder; 
+        
         init();
 
         LoggerUtils.section("Scanning folder: " + folder);
@@ -109,9 +111,7 @@ public class MainClass implements Callable<Integer> {
 
         parser.parse();
 
-        CodeCalculator calculator = new CodeCalculator(parser.getProjectModel());
-
-        calculator.setOutputFile(outputFile);
+        CodeCalculator calculator = new CodeCalculator(parser, outputFile);
 
         calculator.calculate();
 
@@ -128,6 +128,10 @@ public class MainClass implements Callable<Integer> {
 
         if (ignoreFile == null) {
             ignoreFile = tempFolder.resolve(Settings.ignoreFileName);
+        }
+        
+        if(outputFile == null) {
+            outputFile = Settings.getDefaultOutputFile();
         }
 
         if (!Files.exists(ignoreFile)) {
