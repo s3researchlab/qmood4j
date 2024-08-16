@@ -12,7 +12,6 @@ import edu.s3.qmood4j.runner.CodeCalculator;
 import edu.s3.qmood4j.runner.CodeLoader;
 import edu.s3.qmood4j.runner.CodeParser;
 import edu.s3.qmood4j.settings.Settings;
-import edu.s3.qmood4j.utils.FileUtils;
 import edu.s3.qmood4j.utils.LoggerUtils;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -36,9 +35,6 @@ public class MainClass implements Callable<Integer> {
             "--output" }, description = "the output file with qmood metrics (default: /{folder}/qmood.properties")
     private Path outputFile = null;
 
-    @Option(names = { "-i", "--ignore-file" }, description = "the path to the ignore file")
-    private Path ignoreFile = null;
-    
     @Option(names = { "-a",
             "--always-download" }, description = "always download all dependencies (default: ${DEFAULT-VALUE})")
     private boolean alwaysDownload = false;
@@ -85,21 +81,23 @@ public class MainClass implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        Settings.folder = folder; 
-        
-        init();
+        Settings.folder = folder;
+
+        if (outputFile == null) {
+            outputFile = Settings.getDefaultOutputFile();
+        }
+
+        Settings.init();
 
         LoggerUtils.section("Scanning folder: " + folder);
-
-        logger.debug("Ignore File: {}", ignoreFile);
 
         CodeLoader loader = new CodeLoader(folder);
 
         loader.setAlwaysDownload(alwaysDownload);
 
-        for (String ignore : FileUtils.readIgnoreFile(ignoreFile)) {
-            loader.addIgnore(ignore);
-        }
+//        for (String ignore : FileUtils.readIgnoreFile(ignoreFile)) {
+//            loader.addIgnore(ignore);
+//        }
 
         loader.load();
 
@@ -112,27 +110,6 @@ public class MainClass implements Callable<Integer> {
         calculator.calculate();
 
         return 0;
-    }
-
-    private void init() {
-
-        Path tempFolder = folder.resolve(Settings.tempFolderName);
-
-        if (!Files.exists(tempFolder)) {
-            FileUtils.createFolder(tempFolder);
-        }
-
-        if (ignoreFile == null) {
-            ignoreFile = tempFolder.resolve(Settings.ignoreFileName);
-        }
-        
-        if(outputFile == null) {
-            outputFile = Settings.getDefaultOutputFile();
-        }
-
-        if (!Files.exists(ignoreFile)) {
-            FileUtils.write(ignoreFile, "");
-        }
     }
 
 }

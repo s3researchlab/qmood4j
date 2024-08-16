@@ -39,13 +39,14 @@ public class CodeParser {
 
     private ProjectModel pm = new ProjectModel();
 
+    /**
+     * Constructor
+     * 
+     * @param loader code loader
+     */
     public CodeParser(CodeLoader loader) {
-
         this.files = loader.getJavaFiles();
-
-        for (Path dependencyFile : loader.getDependencyFiles()) {
-            this.addLibraries(dependencyFile);
-        }
+        this.libraries.addAll(loader.getDependencyFiles());
     }
 
     public void addLibraries(Path library) {
