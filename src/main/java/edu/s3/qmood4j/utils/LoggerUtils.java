@@ -33,7 +33,7 @@ public class LoggerUtils {
 
     public static final String WHITE = "\u001B[37m";
 
-    public static String separator = "------------------------------------------------------------------------";
+    public static String separator = "------------------------------------------------------------------------";
 
     /**
      * Private Constructor will prevent the instantiation of this class directly
@@ -61,17 +61,17 @@ public class LoggerUtils {
 
     public static String color(String text, String color) {
 
-        return "%s%s%s".formatted(color, text, RESET);
+        return "%s%s%s".formatted(color, text, RESET);
     }
 
-    public static String green(String text) {
+    public static String cyan(String text) {
 
-        return color(text, GREEN);
+        return color(text, CYAN);
     }
 
     public static void section(String sectionName, Object... params) {
         logger.debug(LoggerUtils.separator);
-        logger.debug(green(sectionName), params);
+        logger.debug("{}",cyan(sectionName), params);
         logger.debug(LoggerUtils.separator);
     }
 
