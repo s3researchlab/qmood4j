@@ -61,7 +61,6 @@ public class MainClass implements Callable<Integer> {
 
         CommandLine commandLine = new CommandLine(new MainClass());
 
-        commandLine.setUsageHelpWidth(150);
         commandLine.setCaseInsensitiveEnumValuesAllowed(true);
 
         int exitCode = commandLine.execute(args);
