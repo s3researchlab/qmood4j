@@ -51,7 +51,7 @@ public class MavenUtils {
         if (!Files.exists(jarsFolder)) {
             
             logger.info("");
-            logger.info(LoggerUtils.title("Downloading .jar dependency files"));
+            logger.info("Downloading .jar dependency files");
 
             FileUtils.createFolder(jarsFolder);
 

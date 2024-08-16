@@ -7,8 +7,6 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 
-import com.google.common.base.Strings;
-
 import edu.s3.qmood4j.runner.CodeParser;
 
 public class LoggerUtils {
@@ -42,36 +40,19 @@ public class LoggerUtils {
         throw new UnsupportedOperationException("This class cannot be instantiated");
     }
 
-    public static String title(String title) {
-
-        int total = separator.length();
-        int size = title.length();
-        int leftSize = (total - size) / 2;
-        int rightSize = (total - size) / 2;
-
-        if (size % 2 == 1) {
-            rightSize--;
-        }
-
-        String before = Strings.repeat("-", leftSize);
-        String after = Strings.repeat("-", rightSize);
-
-        return "%s%s%s".formatted(before, title, after);
-    }
-
     public static String color(String text, String color) {
 
         return "%s%s%s".formatted(color, text, RESET);
     }
 
-    public static String cyan(String text) {
+    public static String green(String text) {
 
-        return color(text, CYAN);
+        return color(text, GREEN);
     }
 
     public static void section(String sectionName, Object... params) {
         logger.debug(LoggerUtils.separator);
-        logger.debug("{}",cyan(sectionName), params);
+        logger.debug("{}", green(sectionName), params);
         logger.debug(LoggerUtils.separator);
     }
 
