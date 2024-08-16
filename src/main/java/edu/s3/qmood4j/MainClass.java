@@ -115,9 +115,7 @@ public class MainClass implements Callable<Integer> {
 
         calculator.calculate();
 
-        LoggerUtils.section("SUCCESS");
-        
-        return null;
+        return 0;
     }
 
     private void init() {

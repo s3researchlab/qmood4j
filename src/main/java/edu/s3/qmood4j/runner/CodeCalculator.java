@@ -100,7 +100,7 @@ public class CodeCalculator {
         sortedMetricValues.putAll(projectModel.getMetricValues());
         
         sortedMetricValues.forEach((key, value) -> {
-            logger.debug("%s = %s".formatted(key.getKey(), value));
+            System.out.println("%s = %s".formatted(key.getKey(), value));
         });
 
     }
