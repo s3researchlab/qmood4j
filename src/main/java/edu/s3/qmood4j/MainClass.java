@@ -5,8 +5,6 @@ import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import edu.s3.qmood4j.runner.CodeCalculator;
 import edu.s3.qmood4j.runner.CodeLoader;
@@ -23,8 +21,6 @@ import picocli.CommandLine.Spec;
 
 @Command(sortOptions = false, versionProvider = Settings.class)
 public class MainClass implements Callable<Integer> {
-
-    private static Logger logger = LogManager.getLogger(MainClass.class);
 
     @Spec
     CommandSpec spec;
@@ -94,10 +90,6 @@ public class MainClass implements Callable<Integer> {
         CodeLoader loader = new CodeLoader(folder);
 
         loader.setAlwaysDownload(alwaysDownload);
-
-//        for (String ignore : FileUtils.readIgnoreFile(ignoreFile)) {
-//            loader.addIgnore(ignore);
-//        }
 
         loader.load();
 
