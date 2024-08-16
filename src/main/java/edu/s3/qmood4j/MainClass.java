@@ -87,8 +87,8 @@ public class MainClass implements Callable<Integer> {
 
         init();
 
-        LoggerUtils.section("Scanning folder: {}", folder);
-        
+        LoggerUtils.section("Scanning folder: " + folder);
+
         logger.debug("Ignore File: {}", ignoreFile);
 
         CodeLoader loader = new CodeLoader(folder);
