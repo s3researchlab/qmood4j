@@ -49,7 +49,7 @@ public class MainClass implements Callable<Integer> {
     @Option(names = { "--version" }, versionHelp = true, description = "print version information and exit")
     protected boolean versionRequested = false;
 
-    @Option(names = { "--verbose" }, description = "enable the debugging mode")
+    @Option(names = { "--verbose" }, description = "enable debugging mode")
     public void setVerbose(boolean[] verbose) {
 
         if (verbose.length >= 1) {
