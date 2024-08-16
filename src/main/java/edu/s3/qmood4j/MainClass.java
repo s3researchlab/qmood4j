@@ -103,11 +103,7 @@ public class MainClass implements Callable<Integer> {
 
         loader.load();
 
-        CodeParser parser = new CodeParser(loader.getJavaFiles());
-
-        for (Path dependencyFile : loader.getDependencyFiles()) {
-            parser.addLibraries(dependencyFile);
-        }
+        CodeParser parser = new CodeParser(loader);
 
         parser.parse();
 

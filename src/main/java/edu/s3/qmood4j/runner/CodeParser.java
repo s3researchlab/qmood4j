@@ -39,8 +39,13 @@ public class CodeParser {
 
     private ProjectModel pm = new ProjectModel();
 
-    public CodeParser(List<Path> files) {
-        this.files = files;
+    public CodeParser(CodeLoader loader) {
+
+        this.files = loader.getJavaFiles();
+
+        for (Path dependencyFile : loader.getDependencyFiles()) {
+            this.addLibraries(dependencyFile);
+        }
     }
 
     public void addLibraries(Path library) {
@@ -57,7 +62,7 @@ public class CodeParser {
         StaticJavaParser.getParserConfiguration().setSymbolResolver(getSymbolResolver());
 
         LoggerUtils.section("Parsing java files");
-        
+
         List<ClassOrInterfaceDeclaration> output = new ArrayList<>();
         List<ClassOrInterfaceDeclaration> ignored = new ArrayList<>();
 
@@ -99,9 +104,9 @@ public class CodeParser {
         }
 
         logger.debug("Completed. Class/Interface Declarations: {}, Ignored: {}", output.size(), ignored.size());
-        
+
         LoggerUtils.section("Ignored Classes");
-        
+
         if (ignored.isEmpty()) {
             logger.debug("No Class/Interface ingnored");
         } else {
@@ -115,7 +120,7 @@ public class CodeParser {
         }
 
         LoggerUtils.section("Resolving java files");
-        
+
         for (int i = 0; i < output.size(); i++) {
 
             ClassOrInterfaceDeclaration clsDecl = output.get(i);
@@ -141,7 +146,7 @@ public class CodeParser {
     private JavaSymbolSolver getSymbolResolver() throws IOException {
 
         LoggerUtils.section("Setting up symbol resolvers");
-        
+
         CombinedTypeSolver combinedTypeSolver = new CombinedTypeSolver();
 
         combinedTypeSolver.add(new ReflectionTypeSolver());
