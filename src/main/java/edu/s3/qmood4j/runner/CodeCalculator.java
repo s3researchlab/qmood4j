@@ -67,6 +67,7 @@ public class CodeCalculator {
         this.metrics.add(new Functionality());
         this.metrics.add(new Extendibility());
         this.metrics.add(new Effectiveness());
+        
         this.metrics.add(new TotalQualityIndex());
     }
 

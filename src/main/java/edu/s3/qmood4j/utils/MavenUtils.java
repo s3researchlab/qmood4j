@@ -49,29 +49,29 @@ public class MavenUtils {
     public static void downloadDependencies(Model model, Path jarsFolder) {
 
         if (!Files.exists(jarsFolder)) {
-            
+
             logger.debug("Downloading .jar dependency files");
 
             FileUtils.createFolder(jarsFolder);
 
             Path pomFile = model.getPomFile().toPath();
 
-            for (Dependency dependency : model.getDependencies()) {
-                MavenUtils.downloadJarFile(pomFile, jarsFolder, dependency);
-            }
-
-            if (model.getDependencyManagement() != null) {
-
-                for (Dependency dependency : model.getDependencyManagement().getDependencies()) {
-                    MavenUtils.downloadJarFile(pomFile, jarsFolder, dependency);
-                }
-            }
+            downloadJarsFile(pomFile, jarsFolder, model.getDependencies());
             
-            logger.debug("Completed ");
+            if (model.getDependencyManagement() != null) {
+                downloadJarsFile(pomFile, jarsFolder, model.getDependencyManagement().getDependencies());
+            }
+        }
+    }
+    
+    private static void downloadJarsFile(Path pomFile, Path jarsFolder, List<Dependency> dependencies) {
+        
+        for (Dependency dependency : dependencies) {
+            MavenUtils.downloadJarFile(pomFile, jarsFolder, dependency);
         }
     }
 
-    public static void downloadJarFile(Path pomFile, Path jarFolder, Dependency dependency) {
+    private static void downloadJarFile(Path pomFile, Path jarFolder, Dependency dependency) {
 
         String groupId = dependency.getGroupId();
         String artifactId = dependency.getArtifactId();
@@ -81,11 +81,10 @@ public class MavenUtils {
             return;
         }
 
+        String program = getMavenProgram();
+        
         String artifact = "-Dartifact=%s:%s:%s:jar".formatted(groupId, artifactId, version);
-        String program = "/opt/homebrew/bin/mvn";
-//        String plugin = "org.apache.maven.plugins:maven-dependency-plugin:copy";
-
-//        String plugin = "dependency:sources";
+               
         String plugin = "dependency:copy-dependencies";
 
         String output = "-DoutputDirectory=%s".formatted(jarFolder);
@@ -93,5 +92,14 @@ public class MavenUtils {
         List<String> args = List.of(program, "-f", pomFile.toString(), plugin, artifact, output);
 
         CommandUtils.run(args);
+    }
+
+    private static String getMavenProgram() {
+
+        if (OSUtils.isMacOS()) {
+            return "/opt/homebrew/bin/mvn";
+        }
+
+        return "";
     }
 }
