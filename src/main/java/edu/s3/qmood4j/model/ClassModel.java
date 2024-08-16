@@ -14,8 +14,6 @@ public class ClassModel {
 
     private List<VariableModel> fieldModels = new ArrayList<>();
 
-    private List<MethodDeclaration> methods;
-
     private List<MethodModel> methodModels = new ArrayList<>();
 
     private List<ConstructorDeclaration> constructors;
@@ -24,7 +22,6 @@ public class ClassModel {
 
         this.classDeclaration = classDeclaration;
 
-        this.methods = classDeclaration.getMethods();
         this.constructors = classDeclaration.getConstructors();
 
         for (FieldDeclaration fd : classDeclaration.getFields()) {
@@ -40,20 +37,12 @@ public class ClassModel {
         return this.classDeclaration.isInterface();
     }
 
-    public ClassOrInterfaceDeclaration getClassDeclaration() {
-        return classDeclaration;
-    }
-
     public String getFullClassName() {
         return this.classDeclaration.getFullyQualifiedName().orElse("UNDEFINED");
     }
 
     public int getNumberOfMethods() {
-        return this.methods.size();
-    }
-
-    public List<MethodDeclaration> getMethods() {
-        return this.methods;
+        return this.methodModels.size();
     }
 
     public List<VariableModel> getFieldModels() {
