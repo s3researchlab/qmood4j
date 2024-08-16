@@ -1,7 +1,7 @@
 package edu.s3.qmood4j.metrics.design;
 
 import edu.s3.qmood4j.metrics.DesignMetric;
-import edu.s3.qmood4j.metrics.MetricProperty;
+import edu.s3.qmood4j.metrics.MetricName;
 import edu.s3.qmood4j.model.ClassModel;
 import edu.s3.qmood4j.model.ProjectModel;
 
@@ -14,8 +14,8 @@ import edu.s3.qmood4j.model.ProjectModel;
 public class NumberOfMethods extends DesignMetric {
 
     @Override
-    public MetricProperty getProperty() {
-        return MetricProperty.COMPLEXITY;
+    public MetricName getName() {
+        return MetricName.COMPLEXITY;
     }
     
     @Override

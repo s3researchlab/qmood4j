@@ -44,10 +44,10 @@ public class CodeLoader {
 
     public void addIgnore(String pattern) {
 
-        if (pattern == null || pattern.trim().isEmpty()) {
+        if (pattern.isBlank()) {
             return;
         }
-        
+
         this.ignore.add(pattern);
     }
 
@@ -63,22 +63,14 @@ public class CodeLoader {
 
     public void load() {
 
-        logger.debug(LoggerUtils.separator);
-        logger.debug(LoggerUtils.green("Code Loader"));
-        logger.debug(LoggerUtils.separator);
-        logger.debug("");
-        logger.debug("Ignoring the following patterns");
-        logger.debug("");
-
+        LoggerUtils.section("Ignoring the following patterns:");
+        
         for (int i = 0; i < ignore.size(); i++) {
 
             String pattern = ignore.get(i);
 
             logger.debug("({}/{}) Pattern ignored: {}", i + 1, ignore.size(), pattern);
         }
-
-        logger.debug("");
-        logger.debug("Completed ");
 
         this.downloadMavenDependencies();
         this.loadDependencyFiles();
@@ -87,21 +79,21 @@ public class CodeLoader {
 
     private void downloadMavenDependencies() {
 
-        List<Path> pomFiles = FileUtils.getFilesFromFolder(folder, ignore, "/pom.xml");
+        List<Path> pomFiles = getFilesFromFolder(folder, "/pom.xml");
 
         for (Path pomFile : pomFiles) {
 
             Model model = MavenUtils.readPomFile(pomFile);
 
-            Path folder = pomFile.getParent();
+            Path pomFolder = pomFile.getParent();
             Path jarsFolder = folder.resolve(".qmood4j", "dependencies");
 
-            if (Files.exists(folder.resolve("src", "main", "java"))) {
-                dependencyFiles.add(folder.resolve("src", "main", "java"));
-            } else if (Files.exists(folder.resolve("src", "main"))) {
-                dependencyFiles.add(folder.resolve("src", "main"));
-            } else if (Files.exists(folder.resolve("src"))) {
-                dependencyFiles.add(folder.resolve("src"));
+            if (Files.exists(pomFolder.resolve("src", "main", "java"))) {
+                dependencyFiles.add(pomFolder.resolve("src", "main", "java"));
+            } else if (Files.exists(pomFolder.resolve("src", "main"))) {
+                dependencyFiles.add(pomFolder.resolve("src", "main"));
+            } else if (Files.exists(pomFolder.resolve("src"))) {
+                dependencyFiles.add(pomFolder.resolve("src"));
             }
 
             if (alwaysDownload) {
@@ -114,28 +106,25 @@ public class CodeLoader {
 
     private void loadJavaFiles() {
 
-        logger.debug("");
-        logger.debug(LoggerUtils.title("Loading .java files"));
+        LoggerUtils.section("Loading .java files");
 
-        this.javaFiles.addAll(FileUtils.getFilesFromFolder(this.folder, this.ignore, ".java"));
+        this.javaFiles.addAll(getFilesFromFolder(this.folder, ".java"));
 
-        logger.debug("");
-        logger.debug("Completed");
-        logger.debug("");
-        logger.debug("Java files found: {}", this.javaFiles.size());
+        logger.debug("Completed. Java files found: {}", this.javaFiles.size());
     }
 
     private void loadDependencyFiles() {
+        
+        LoggerUtils.section("Loading .jar dependency files");
 
-        logger.debug("");
-        logger.debug(LoggerUtils.title("Loading .jar dependency files"));
+        this.dependencyFiles.addAll(getFilesFromFolder(this.folder, ".jar"));
 
-        this.dependencyFiles.addAll(FileUtils.getFilesFromFolder(this.folder, ignore, ".jar"));
+        logger.debug("Completed. Dependencies found: {}", this.dependencyFiles.size());
+    }
 
-        logger.debug("");
-        logger.debug("Completed");
-        logger.debug("");
-        logger.debug("Dependencies found: {}", this.dependencyFiles.size());
+    private List<Path> getFilesFromFolder(Path folder, String fileExtension) {
+
+        return FileUtils.getFilesFromFolder(folder, this.ignore, fileExtension);
     }
 
 }

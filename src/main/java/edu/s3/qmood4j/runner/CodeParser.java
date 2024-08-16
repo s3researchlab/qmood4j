@@ -53,18 +53,11 @@ public class CodeParser {
 
     public void parse() throws IOException {
 
-        logger.debug("");
-        logger.debug(LoggerUtils.separator);
-        logger.debug(LoggerUtils.green("Code Parser"));
-        logger.debug(LoggerUtils.separator);
-
         StaticJavaParser.getParserConfiguration().setCharacterEncoding(StandardCharsets.UTF_8);
         StaticJavaParser.getParserConfiguration().setSymbolResolver(getSymbolResolver());
 
-        logger.debug("");
-        logger.debug(LoggerUtils.title("Parsing all java files"));
-        logger.debug("");
-
+        LoggerUtils.section("Parsing java files");
+        
         List<ClassOrInterfaceDeclaration> output = new ArrayList<>();
         List<ClassOrInterfaceDeclaration> ignored = new ArrayList<>();
 
@@ -105,17 +98,13 @@ public class CodeParser {
             }, null);
         }
 
-        logger.debug("");
-        logger.debug("Completed");
-        logger.debug("");
-        logger.debug("Class/Interface Declarations: {}, Ignored: {}", output.size(), ignored.size());
-
-        if (!ignored.isEmpty()) {
-
-            logger.debug("");
-            logger.debug(LoggerUtils.title("Ignored Classes"));
-            logger.debug("");
-
+        logger.debug("Completed. Class/Interface Declarations: {}, Ignored: {}", output.size(), ignored.size());
+        
+        LoggerUtils.section("Ignored Classes");
+        
+        if (ignored.isEmpty()) {
+            logger.debug("No Class/Interface ingnored");
+        } else {
             for (int i = 0; i < ignored.size(); i++) {
 
                 ClassOrInterfaceDeclaration clsDecl = ignored.get(i);
@@ -125,10 +114,8 @@ public class CodeParser {
             }
         }
 
-        logger.debug("");
-        logger.debug(LoggerUtils.title("Resolving all java files"));
-        logger.debug("");
-
+        LoggerUtils.section("Resolving java files");
+        
         for (int i = 0; i < output.size(); i++) {
 
             ClassOrInterfaceDeclaration clsDecl = output.get(i);
@@ -140,11 +127,7 @@ public class CodeParser {
             this.pm.addClassModel(clsDecl);
         }
 
-        logger.debug("");
-        logger.debug("Completed");
-        logger.debug("");
-        logger.debug("Classes: {}, Interfaces: {}", pm.getNumberOfClasses(), pm.getNumberOfInterfaces());
-        logger.debug("");
+        logger.debug("Completed. Classes: {}, Interfaces: {}", pm.getNumberOfClasses(), pm.getNumberOfInterfaces());
     }
 
     /**
@@ -157,10 +140,8 @@ public class CodeParser {
      */
     private static CombinedTypeSolver getCombinedTypeSolver(List<Path> libraries) throws IOException {
 
-        logger.debug("");
-        logger.debug("Setting up symbol resolvers");
-        logger.debug("");
-
+        LoggerUtils.section("Setting up symbol resolvers");
+        
         CombinedTypeSolver combinedTypeSolver = new CombinedTypeSolver();
 
         combinedTypeSolver.add(new ReflectionTypeSolver());
@@ -183,10 +164,7 @@ public class CodeParser {
             }
         }
 
-        logger.debug("");
-        logger.debug("Completed");
-        logger.debug("");
-        logger.debug("Jar Files: {}, Folders: {}", jarsCounter, foldersCounter);
+        logger.debug("Completed. Jar Files: {}, Folders: {}", jarsCounter, foldersCounter);
 
         return combinedTypeSolver;
     }

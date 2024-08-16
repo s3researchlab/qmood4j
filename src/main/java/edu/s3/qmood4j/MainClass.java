@@ -23,38 +23,48 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-@Command(versionProvider = Settings.class)
+@Command(sortOptions = false, versionProvider = Settings.class)
 public class MainClass implements Callable<Integer> {
 
     private static Logger logger = LogManager.getLogger(MainClass.class);
 
     @NotNull(message = "folder cannot be null")
-    @Parameters(paramLabel = "folder", description = "the project's source code")
+    @Parameters(paramLabel = "folder", description = "the folder with the source code")
     protected Path folder;
 
-    @Option(names = { "-o", "--output" }, description = "the output file with qmood metrics")
+    @Option(names = { "-o",
+            "--output" }, description = "the output file with qmood metrics (default: ${DEFAULT-VALUE})")
     protected Path outputFile = FileUtils.getCurrentFolder().resolve("qmood.properties");
 
-    @Option(names = { "-d", "--debug" }, description = "enable the debugging mode")
-    protected boolean debug = false;
-
-    @Option(names = { "-a", "--always-download" }, description = "always download all dependencies")
+    @Option(names = { "-a",
+            "--always-download" }, description = "always download all dependencies (default: ${DEFAULT-VALUE})")
     protected boolean alwaysDownload = false;
 
     @Option(names = { "-i", "--ignore-file" }, description = "the path to the ignore file")
     protected Path ignoreFile = null;
 
-    @Option(names = { "-h", "--help" }, usageHelp = true, description = "display the help menu")
+    @Option(names = { "--help" }, usageHelp = true, description = "display the help menu")
     protected boolean helpRequested = false;
 
-    @Option(names = { "-v", "--version" }, versionHelp = true, description = "print version information and exit")
+    @Option(names = { "--version" }, versionHelp = true, description = "print version information and exit")
     protected boolean versionRequested = false;
+
+    @Option(names = { "--verbose" }, description = "enable the debugging mode")
+    public void setVerbose(boolean[] verbose) {
+
+        if (verbose.length >= 1) {
+            LoggerUtils.setLevel(Level.DEBUG);
+        } 
+    }
 
     public static void main(String[] args) {
 
         CommandLine commandLine = new CommandLine(new MainClass());
 
-        int exitCode = commandLine.setCaseInsensitiveEnumValuesAllowed(true).execute(args);
+        commandLine.setUsageHelpWidth(150);
+        commandLine.setCaseInsensitiveEnumValuesAllowed(true);
+
+        int exitCode = commandLine.execute(args);
 
         System.exit(exitCode);
     }
@@ -67,13 +77,10 @@ public class MainClass implements Callable<Integer> {
 
         init();
 
-        logger.debug("Scanning project...");
-        logger.debug("");
-        logger.debug("Folder: {}", folder);
-        logger.debug("");
+        LoggerUtils.section("Scanning folder: {}", folder);
+        
         logger.debug("Ignore File: {}", ignoreFile);
-        logger.debug("");
-      
+
         CodeLoader loader = new CodeLoader(folder);
 
         loader.setAlwaysDownload(alwaysDownload);
@@ -98,9 +105,8 @@ public class MainClass implements Callable<Integer> {
 
         calculator.calculate();
 
-        logger.debug("");
         logger.debug(LoggerUtils.separator);
-        logger.debug(LoggerUtils.green("SUCCESS"));
+        logger.debug("SUCCESS");
         logger.debug(LoggerUtils.separator);
 
         return null;
@@ -120,12 +126,6 @@ public class MainClass implements Callable<Integer> {
 
         if (!Files.exists(ignoreFile)) {
             FileUtils.write(ignoreFile, "");
-        }
-
-        if (debug) {
-            LoggerUtils.setLevel(Level.DEBUG);
-        } else {
-            LoggerUtils.setLevel(Level.INFO);
         }
     }
 

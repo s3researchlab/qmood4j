@@ -2,22 +2,22 @@ package edu.s3.qmood4j.metrics.quality;
 
 import java.util.Map;
 
-import edu.s3.qmood4j.metrics.MetricProperty;
+import edu.s3.qmood4j.metrics.MetricName;
 import edu.s3.qmood4j.metrics.QualityMetric;
 
 public class Reusability implements QualityMetric {
 
-    public MetricProperty getProperty() {
-        return MetricProperty.REUSABILITY;
+    public MetricName getName() {
+        return MetricName.REUSABILITY;
     }
 
     @Override
-    public double calculate(Map<MetricProperty, Double> mv) {
+    public double calculate(Map<MetricName, Double> mv) {
 
-        double coupling = mv.getOrDefault(MetricProperty.COUPLING, 0.0);
-        double cohesion = mv.getOrDefault(MetricProperty.COHESION, 0.0);
-        double messaging = mv.getOrDefault(MetricProperty.MESSAGING, 0.0);
-        double designSize = mv.getOrDefault(MetricProperty.DESIGN_SIZE, 0.0);
+        double coupling = mv.getOrDefault(MetricName.COUPLING, 0.0);
+        double cohesion = mv.getOrDefault(MetricName.COHESION, 0.0);
+        double messaging = mv.getOrDefault(MetricName.MESSAGING, 0.0);
+        double designSize = mv.getOrDefault(MetricName.DESIGN_SIZE, 0.0);
 
         return -0.25 * coupling + 0.25 * cohesion + 0.5 * messaging + 0.5 * designSize;
     }

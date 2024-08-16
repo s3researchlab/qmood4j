@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import edu.s3.qmood4j.metrics.DesignMetric;
-import edu.s3.qmood4j.metrics.MetricProperty;
+import edu.s3.qmood4j.metrics.MetricName;
 import edu.s3.qmood4j.model.ClassModel;
 import edu.s3.qmood4j.model.MethodModel;
 import edu.s3.qmood4j.model.ProjectModel;
@@ -19,8 +19,8 @@ import edu.s3.qmood4j.model.VariableModel;
 public class CohesionAmongMethodsOfClass extends DesignMetric {
 
     @Override
-    public MetricProperty getProperty() {
-        return MetricProperty.COHESION;
+    public MetricName getName() {
+        return MetricName.COHESION;
     }
 
     @Override

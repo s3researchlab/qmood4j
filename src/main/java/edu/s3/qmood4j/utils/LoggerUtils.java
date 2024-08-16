@@ -2,13 +2,18 @@ package edu.s3.qmood4j.utils;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import com.google.common.base.Strings;
 
+import edu.s3.qmood4j.runner.CodeParser;
+
 public class LoggerUtils {
+
+    private static Logger logger = LogManager.getLogger(CodeParser.class);
 
     public static final String RESET = "\u001B[0m";
 
@@ -64,11 +69,17 @@ public class LoggerUtils {
         return color(text, GREEN);
     }
 
+    public static void section(String sectionName, Object... params) {
+        logger.debug(LoggerUtils.separator);
+        logger.debug(green(sectionName), params);
+        logger.debug(LoggerUtils.separator);
+    }
+
     public static void setLevel(Level level) {
 
         LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         Configuration config = ctx.getConfiguration();
-        LoggerConfig log = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME); 
+        LoggerConfig log = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
 
         log.setLevel(level);
 

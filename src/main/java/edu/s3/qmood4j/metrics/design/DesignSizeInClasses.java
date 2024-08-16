@@ -1,7 +1,7 @@
 package edu.s3.qmood4j.metrics.design;
 
 import edu.s3.qmood4j.metrics.DesignMetric;
-import edu.s3.qmood4j.metrics.MetricProperty;
+import edu.s3.qmood4j.metrics.MetricName;
 import edu.s3.qmood4j.model.ProjectModel;
 
 /**
@@ -13,8 +13,8 @@ import edu.s3.qmood4j.model.ProjectModel;
 public class DesignSizeInClasses extends DesignMetric {
 
     @Override
-    public MetricProperty getProperty() {
-        return MetricProperty.DESIGN_SIZE;
+    public MetricName getName() {
+        return MetricName.DESIGN_SIZE;
     }
 
     @Override
