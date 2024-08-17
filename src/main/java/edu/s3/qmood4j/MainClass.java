@@ -79,10 +79,6 @@ public class MainClass implements Callable<Integer> {
 
         Settings.folder = folder;
 
-        if (outputFile == null) {
-            outputFile = Settings.getDefaultOutputFile();
-        }
-
         Settings.init();
 
         LoggerUtils.section("Scanning folder: " + folder);

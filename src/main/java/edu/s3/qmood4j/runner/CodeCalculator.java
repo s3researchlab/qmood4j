@@ -63,7 +63,7 @@ public class CodeCalculator {
         this.metrics.add(new NumberOfPolymorphicMethods());
         this.metrics.add(new ClassInterfaceSize());
         this.metrics.add(new NumberOfMethods());
-        
+
         // Quality Metrics
         this.metrics.add(new Reusability());
         this.metrics.add(new Flexibility());
@@ -71,7 +71,7 @@ public class CodeCalculator {
         this.metrics.add(new Functionality());
         this.metrics.add(new Extendibility());
         this.metrics.add(new Effectiveness());
-        
+
         this.metrics.add(new TotalQualityIndex());
     }
 
@@ -82,12 +82,12 @@ public class CodeCalculator {
         for (int i = 0; i < metrics.size(); i++) {
 
             Metric metric = metrics.get(i);
-            
+
             projectModel.getMetricValues().put(metric.getName(), metric.calculate(projectModel));
-            
+
             logger.debug("({}/{}) Calculating values for {}", i + 1, metrics.size(), metric.getName().getKey());
         }
-        
+
         LoggerUtils.section("Results");
 
         Map<MetricName, Double> sortedMetricValues = new TreeMap<>(new Comparator<MetricName>() {
@@ -99,22 +99,24 @@ public class CodeCalculator {
         });
 
         sortedMetricValues.putAll(projectModel.getMetricValues());
-        
+
         StringBuilder builder = new StringBuilder();
-        
+
         builder.append("# Folder: %s\n".formatted(Settings.folder));
         builder.append("# %s\n".formatted(ZonedDateTime.now().toString()));
-        
+
         sortedMetricValues.forEach((key, value) -> {
             builder.append("%s = %s\n".formatted(key.getKey(), value));
         });
-        
+
         String content = builder.toString();
-        
-        if (outputFile != null) {
-            FileUtils.write(outputFile, content.toString());
+
+        if (outputFile == null) {
+            outputFile = Settings.getDefaultOutputFile();
         }
-        
+
+        FileUtils.write(outputFile, content.toString());
+
         System.out.println(content);
     }
 }
