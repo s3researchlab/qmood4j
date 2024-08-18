@@ -46,7 +46,7 @@ public class ProjectModel {
                 GraphUtils.addEdgeIfNotExist(extendsGraph, fullClassName, extendedFullClassName);
 
             } catch (Exception ex) {
-                logger.error("Exception thrown", ex);
+                logger.error(ex.getMessage(), ex);
             }
         }
 
