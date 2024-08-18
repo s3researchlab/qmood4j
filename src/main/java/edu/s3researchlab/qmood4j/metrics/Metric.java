@@ -32,15 +32,4 @@ public abstract class Metric {
     public double calculate(Map<MetricName, Double> metricValues) {
         return 0.0;
     }
-    
-    public void calculateAll(ProjectModel pm) {
-
-        double total = 0.0;
-
-        for (ClassModel cm : pm.getClassModels().values()) {
-            total += calculate(pm, cm);
-        }
-
-//        return total / pm.getNumberOfClasses();
-    }
 }

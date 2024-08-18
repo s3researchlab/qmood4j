@@ -97,8 +97,7 @@ public class CodeCalculator {
         LoggerUtils.section("Results");
 
         StringBuilder overviewBuilder = new StringBuilder();
-        StringBuilder detailedBuilder = new StringBuilder();
-
+       
         overviewBuilder.append("# Folder: %s\n".formatted(Settings.folder));
         overviewBuilder.append("# %s\n".formatted(Settings.getDateTimeNow()));
 
