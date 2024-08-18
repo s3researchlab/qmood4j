@@ -71,6 +71,7 @@ public class Settings implements IVersionProvider {
     }
 
     public static double getEstimatedTimeInSeconds() {
+        
         return (System.currentTimeMillis() - startTime) / 1000.0;
     }
 
