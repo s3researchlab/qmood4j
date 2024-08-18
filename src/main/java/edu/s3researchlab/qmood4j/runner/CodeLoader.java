@@ -35,13 +35,13 @@ public class CodeLoader {
         logger.debug("Ignoring the following patterns");
 
         List<String> patterns = FileUtils.readLines(Settings.getIgnoreFile());
-        
+
         for (int i = 0; i < patterns.size(); i++) {
 
             String pattern = patterns.get(i);
 
             this.addIgnore(pattern);
-            
+
             logger.debug("({}/{}) Pattern ignored: {}", i + 1, patterns.size(), pattern);
         }
     }
@@ -71,6 +71,7 @@ public class CodeLoader {
 
     public void load() {
         this.downloadMavenDependencies();
+        this.downloadEclipseDependencies();
         this.loadDependencyFiles();
         this.loadJavaFiles();
     }
@@ -105,6 +106,16 @@ public class CodeLoader {
             }
 
             MavenUtils.downloadDependencies(model, jarsFolder);
+        }
+    }
+
+    private void downloadEclipseDependencies() {
+
+        if (Files.exists(folder.resolve(".project"))) {
+
+            if (Files.exists(folder.resolve("src"))) {
+                this.dependencyFiles.add(folder.resolve("src"));
+            }
         }
     }
 
