@@ -1,12 +1,10 @@
 package edu.s3researchlab.qmood4j.utils;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
 import edu.s3researchlab.qmood4j.runner.CodeParser;
@@ -29,17 +27,6 @@ public class LoggerUtils {
         logger.info(LoggerUtils.separator);
         logger.info(sectionName, params);
         logger.info(LoggerUtils.separator);
-    }
-
-    public static void setLevel(Level level) {
-
-        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-        Configuration config = ctx.getConfiguration();
-        LoggerConfig log = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
-
-        log.setLevel(level);
-
-        ctx.updateLoggers();
     }
 
     public static void setAppenders() {

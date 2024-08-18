@@ -45,14 +45,6 @@ public class MainClass implements Callable<Integer> {
     @Option(names = { "--version" }, versionHelp = true, description = "print version information and exit")
     private boolean versionRequested = false;
 
-    @Option(names = { "--verbose" }, description = "enable debugging mode")
-    public void setVerbose(boolean[] verbose) {
-
-        if (verbose.length >= 1) {
-            LoggerUtils.setLevel(Level.DEBUG);
-        }
-    }
-
     @Parameters(paramLabel = "folder", description = "the folder with the source code")
     public void setFolder(Path folder) {
 
