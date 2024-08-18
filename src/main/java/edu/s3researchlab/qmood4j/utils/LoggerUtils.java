@@ -56,9 +56,9 @@ public class LoggerUtils {
     }
 
     public static void section(String sectionName, Object... params) {
-        logger.debug(LoggerUtils.separator);
-        logger.debug("{}", green(sectionName), params);
-        logger.debug(LoggerUtils.separator);
+        logger.info(LoggerUtils.separator);
+        logger.info("{}", green(sectionName), params);
+        logger.info(LoggerUtils.separator);
     }
 
     public static void setLevel(Level level) {
@@ -78,30 +78,16 @@ public class LoggerUtils {
         Configuration config = ctx.getConfiguration();
         
         FileAppender errorFA = FileAppender.newBuilder()
-                .setName("LogErrorToFile")
+                .setName("logToFile")
                 .withAppend(false)
-                .setFilter(ThresholdFilter.createFilter(Level.ERROR, Result.ACCEPT, Result.DENY))
-                .withFileName(Settings.getProjectFolder().resolve("error.log").toString())
+                .withFileName(Settings.getOutFolder().resolve("info.log").toString())
                 .setLayout(PatternLayout.newBuilder().withPattern("%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %msg%n").build())
                 .setConfiguration(config).build();
-       
-        FileAppender debugFA = FileAppender.newBuilder()
-                .setName("LogDebugToFile")
-                .withAppend(false)
-                .setFilter(ThresholdFilter.createFilter(Level.DEBUG, Result.ACCEPT, Result.DENY))
-                .withFileName(Settings.getProjectFolder().resolve("debug.log").toString())
-                .setLayout(PatternLayout.newBuilder().withPattern("%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %msg%n").build())
-                .setConfiguration(config).build();
-        
+
         errorFA.start();
-        debugFA.start();
-        
+
         config.addAppender(errorFA);
-        config.addAppender(debugFA);
-        
         ctx.getRootLogger().addAppender(config.getAppender(errorFA.getName()));
-        ctx.getRootLogger().addAppender(config.getAppender(debugFA.getName()));
-        
         ctx.updateLoggers();
     }
 }

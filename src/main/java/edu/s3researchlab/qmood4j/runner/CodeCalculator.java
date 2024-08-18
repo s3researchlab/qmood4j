@@ -85,7 +85,7 @@ public class CodeCalculator {
 
             projectModel.getMetricValues().put(metric.getName(), metric.calculate(projectModel));
 
-            logger.debug("({}/{}) Calculating values for {}", i + 1, metrics.size(), metric.getName().getKey());
+            logger.info("({}/{}) Calculating values for {}", i + 1, metrics.size(), metric.getName().getKey());
         }
 
         LoggerUtils.section("Results");
@@ -107,16 +107,18 @@ public class CodeCalculator {
 
         sortedMetricValues.forEach((key, value) -> {
             builder.append("%s = %s\n".formatted(key.getKey(), value));
+            logger.info("%s = %s".formatted(key.getKey(), value));
         });
 
         String content = builder.toString();
 
         if (outputFile == null) {
-            outputFile = Settings.getProjectMetricsOverviewFile();
+            outputFile = Settings.getMetricsOverviewFile();
         }
 
         FileUtils.write(outputFile, content.toString());
 
-        System.out.println(content);
+//        logger.info(content)
+//        System.out.println(content);
     }
 }

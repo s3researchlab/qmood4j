@@ -71,7 +71,7 @@ public class CodeParser {
 
             Path file = files.get(i);
 
-            logger.debug("({}/{}) Parsing {}", i + 1, files.size(), file);
+            logger.info("({}/{}) Parsing {}", i + 1, files.size(), file);
 
             CompilationUnit cu = StaticJavaParser.parse(file);
 
@@ -104,18 +104,18 @@ public class CodeParser {
             }, null);
         }
 
-        logger.debug("Completed. Class/Interface Declarations: {}, Ignored: {}", output.size(), ignored.size());
+        logger.info("Completed. Class/Interface Declarations: {}, Ignored: {}", output.size(), ignored.size());
 
         LoggerUtils.section("Ignored Classes");
 
         if (ignored.isEmpty()) {
-            logger.debug("No Class/Interface ingnored");
+            logger.info("No Class/Interface ingnored");
         } else {
             for (int i = 0; i < ignored.size(); i++) {
 
                 ClassOrInterfaceDeclaration clsDecl = ignored.get(i);
 
-                logger.debug("({}/{}) Class '{}' from {}", i + 1, ignored.size(), clsDecl.getNameAsString(),
+                logger.info("({}/{}) Class '{}' from {}", i + 1, ignored.size(), clsDecl.getNameAsString(),
                         clsDecl.getData(PATH));
             }
         }
@@ -128,12 +128,12 @@ public class CodeParser {
 
             Path file = clsDecl.getData(CodeParser.PATH);
 
-            logger.debug("({}/{}) Resolving '{}' from {}", i + 1, output.size(), clsDecl.getNameAsString(), file);
+            logger.info("({}/{}) Resolving '{}' from {}", i + 1, output.size(), clsDecl.getNameAsString(), file);
 
             this.pm.addClassModel(clsDecl);
         }
 
-        logger.debug("Completed. Classes: {}, Interfaces: {}", pm.getNumberOfClasses(), pm.getNumberOfInterfaces());
+        logger.info("Completed. Classes: {}, Interfaces: {}", pm.getNumberOfClasses(), pm.getNumberOfInterfaces());
     }
 
     /**
@@ -159,7 +159,7 @@ public class CodeParser {
 
             Path library = this.libraries.get(i);
 
-            logger.debug("({}/{}) Adding resolver for {}", i + 1, this.libraries.size(), library);
+            logger.info("({}/{}) Adding resolver for {}", i + 1, this.libraries.size(), library);
 
             if (library.toString().endsWith(".jar")) {
                 combinedTypeSolver.add(new JarTypeSolver(library));
@@ -170,7 +170,7 @@ public class CodeParser {
             }
         }
 
-        logger.debug("Completed. Jar Files: {}, Folders: {}", jarsCounter, foldersCounter);
+        logger.info("Completed. Jar Files: {}, Folders: {}", jarsCounter, foldersCounter);
 
         return new JavaSymbolSolver(combinedTypeSolver);
     }

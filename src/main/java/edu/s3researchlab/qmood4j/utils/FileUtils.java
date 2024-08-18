@@ -152,7 +152,6 @@ public class FileUtils {
 
     public static void write(Path outputFile, String content) {
 
-        System.out.println(outputFile);
         checkNotNull(outputFile);
 
         if (content == null) {

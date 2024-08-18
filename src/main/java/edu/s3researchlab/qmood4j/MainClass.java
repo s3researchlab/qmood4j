@@ -94,6 +94,8 @@ public class MainClass implements Callable<Integer> {
         CodeCalculator calculator = new CodeCalculator(parser, outputFile);
 
         calculator.calculate();
+        
+        LoggerUtils.section("SUCCESS");
 
         return 0;
     }
