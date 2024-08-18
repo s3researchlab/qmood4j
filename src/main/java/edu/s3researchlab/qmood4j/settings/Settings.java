@@ -2,6 +2,8 @@ package edu.s3researchlab.qmood4j.settings;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import edu.s3researchlab.qmood4j.utils.FileUtils;
@@ -12,6 +14,8 @@ public class Settings implements IVersionProvider {
 
     /** The project's current folder */
     public static Path folder;
+
+    public static long startTime = 0L;
 
     public static String outFolderName = ".qmood4j";
 
@@ -33,7 +37,7 @@ public class Settings implements IVersionProvider {
 
         return folder.resolve(outFolderName);
     }
-    
+
     public static Path getDependenciesFolder() {
 
         return folder.resolve(".qmood4j", "dependencies");
@@ -43,7 +47,7 @@ public class Settings implements IVersionProvider {
 
         return getOutFolder().resolve(Settings.ignoreFileName);
     }
-    
+
     public static Path getMetricsOverviewFile() {
 
         return getOutFolder().resolve(Settings.metricsOverviewFileName);
@@ -52,9 +56,11 @@ public class Settings implements IVersionProvider {
     public static void init(Path folder) {
 
         Settings.folder = folder;
-        
+
+        Settings.startTime = System.currentTimeMillis();
+
         FileUtils.createFolderIfNotExists(getOutFolder());
-       
+
         Path ignoreFile = Settings.getIgnoreFile();
 
         if (!Files.exists(ignoreFile)) {
@@ -62,6 +68,17 @@ public class Settings implements IVersionProvider {
         }
 
         LoggerUtils.setAppenders();
+    }
+
+    public static double getEstimatedTimeInSeconds() {
+        return (System.currentTimeMillis() - startTime) / 1000.0;
+    }
+
+    public static String getDateTimeNow() {
+
+        ZonedDateTime dateTimeNow = ZonedDateTime.now();
+
+        return DateTimeFormatter.RFC_1123_DATE_TIME.format(dateTimeNow);
     }
 
     private static List<String> getDefaultIgnore() {

@@ -5,6 +5,8 @@ import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import edu.s3researchlab.qmood4j.runner.CodeCalculator;
 import edu.s3researchlab.qmood4j.runner.CodeLoader;
@@ -21,6 +23,8 @@ import picocli.CommandLine.Spec;
 
 @Command(sortOptions = false, versionProvider = Settings.class)
 public class MainClass implements Callable<Integer> {
+
+    private static Logger logger = LogManager.getLogger(MainClass.class);
 
     @Spec
     CommandSpec spec;
@@ -94,8 +98,11 @@ public class MainClass implements Callable<Integer> {
         CodeCalculator calculator = new CodeCalculator(parser, outputFile);
 
         calculator.calculate();
-        
+
         LoggerUtils.section("SUCCESS");
+        logger.info("Total time: {} s", Settings.getEstimatedTimeInSeconds());
+        logger.info("Finished at: {}", Settings.getDateTimeNow());
+        logger.info(LoggerUtils.separator);
 
         return 0;
     }
