@@ -1,14 +1,14 @@
 package edu.s3researchlab.qmood4j.runner;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.util.Strings;
 
 import edu.s3researchlab.qmood4j.metrics.Metric;
 import edu.s3researchlab.qmood4j.metrics.MetricName;
@@ -30,6 +30,7 @@ import edu.s3researchlab.qmood4j.metrics.quality.Functionality;
 import edu.s3researchlab.qmood4j.metrics.quality.Reusability;
 import edu.s3researchlab.qmood4j.metrics.quality.TotalQualityIndex;
 import edu.s3researchlab.qmood4j.metrics.quality.Understandability;
+import edu.s3researchlab.qmood4j.model.ClassModel;
 import edu.s3researchlab.qmood4j.model.ProjectModel;
 import edu.s3researchlab.qmood4j.settings.Settings;
 import edu.s3researchlab.qmood4j.utils.FileUtils;
@@ -43,7 +44,13 @@ public class CodeCalculator {
 
     private Path outputFile;
 
-    private List<Metric> metrics = new ArrayList<>();
+    private Set<Metric> metrics = new TreeSet<>(new Comparator<Metric>() {
+
+        @Override
+        public int compare(Metric m1, Metric m2) {
+            return m1.getName().getKey().compareToIgnoreCase(m2.getName().getKey());
+        }
+    });
 
     public CodeCalculator(CodeParser parser, Path outputFile) {
 
@@ -78,43 +85,67 @@ public class CodeCalculator {
 
         LoggerUtils.section("Calculating QMOOD metrics");
 
-        for (int i = 0; i < metrics.size(); i++) {
+        int counter = 1;
 
-            Metric metric = metrics.get(i);
+        for (Metric metric : this.metrics) {
 
             projectModel.getMetricValues().put(metric.getName(), metric.calculate(projectModel));
 
-            logger.info("({}/{}) Calculating values for {}", i + 1, metrics.size(), metric.getName().getKey());
+            logger.info("({}/{}) Calculating values for {}", counter++, metrics.size(), metric.getName().getKey());
         }
 
         LoggerUtils.section("Results");
 
-        Map<MetricName, Double> sortedMetricValues = new TreeMap<>(new Comparator<MetricName>() {
+        StringBuilder overviewBuilder = new StringBuilder();
+        StringBuilder detailedBuilder = new StringBuilder();
 
-            @Override
-            public int compare(MetricName m1, MetricName m2) {
-                return m1.getKey().compareToIgnoreCase(m2.getKey());
-            }
-        });
+        overviewBuilder.append("# Folder: %s\n".formatted(Settings.folder));
+        overviewBuilder.append("# %s\n".formatted(Settings.getDateTimeNow()));
 
-        sortedMetricValues.putAll(projectModel.getMetricValues());
+        for (Metric metric : this.metrics) {
 
-        StringBuilder builder = new StringBuilder();
+            MetricName name = metric.getName();
 
-        builder.append("# Folder: %s\n".formatted(Settings.folder));
-        builder.append("# %s\n".formatted(Settings.getDateTimeNow()));
+            double value = projectModel.getMetricValues().get(name);
 
-        sortedMetricValues.forEach((key, value) -> {
-            builder.append("%s = %s\n".formatted(key.getKey(), value));
-            logger.info("%s = %s".formatted(key.getKey(), value));
-        });
+            String output = "%s = %s".formatted(name.getKey(), value);
 
-        String content = builder.toString();
-
-        if (outputFile == null) {
-            outputFile = Settings.getMetricsOverviewFile();
+            overviewBuilder.append(output + "\n");
+            logger.info(output);
         }
 
-        FileUtils.write(outputFile, content.toString());
+        FileUtils.write(Settings.getMetricsOverviewFile(), overviewBuilder.toString());
+        FileUtils.write(Settings.getMetricsDetailedFile(), generateDetailedMetrics());
+    }
+
+    private String generateDetailedMetrics() {
+
+        StringBuilder builder = new StringBuilder("class_name,");
+
+        List<String> keys = this.metrics.stream().map(e -> e.getName().toString().toLowerCase()).toList();
+
+        builder.append(Strings.join(keys, ',')).append("\n");
+
+        for (ClassModel clsModel : projectModel.getClassModels().values()) {
+
+            builder.append(clsModel.getFullClassName()).append(",");
+
+            for (Metric metric : this.metrics) {
+
+                MetricName name = metric.getName();
+
+                double value = 0.0;
+
+                if (clsModel.metricValues.containsKey(name)) {
+                    value = clsModel.metricValues.get(name);
+                }
+
+                builder.append(value).append(",");
+            }
+
+            builder.append("\n");
+        }
+
+        return builder.toString();
     }
 }

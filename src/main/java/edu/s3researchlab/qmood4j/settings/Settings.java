@@ -26,6 +26,8 @@ public class Settings implements IVersionProvider {
     public static String logFileName = "out.log";
 
     public static String metricsOverviewFileName = "metrics-overview.txt";
+    
+    public static String metricsDetailedFileName = "metrics-detailed.txt";
 
     public String[] getVersion() {
 
@@ -48,6 +50,11 @@ public class Settings implements IVersionProvider {
     public static Path getMetricsOverviewFile() {
 
         return getOutFolder().resolve(Settings.metricsOverviewFileName);
+    }
+    
+    public static Path getMetricsDetailedFile() {
+        
+        return getOutFolder().resolve(Settings.metricsDetailedFileName);
     }
 
     public static void init(Path folder) {
@@ -83,5 +90,7 @@ public class Settings implements IVersionProvider {
 
         return List.of(".*module-info.java", ".*package-info.java", ".*/target/.*", ".*/test/.*");
     }
+
+    
 
 }

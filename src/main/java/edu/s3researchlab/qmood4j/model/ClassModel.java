@@ -1,12 +1,16 @@
 package edu.s3researchlab.qmood4j.model;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+
+import edu.s3researchlab.qmood4j.metrics.MetricName;
 
 public class ClassModel {
 
@@ -17,6 +21,8 @@ public class ClassModel {
     private List<MethodModel> methodModels = new ArrayList<>();
 
     private List<ConstructorDeclaration> constructors;
+    
+    public Map<MetricName, Double> metricValues = new EnumMap<>(MetricName.class);
 
     public ClassModel(ClassOrInterfaceDeclaration classDeclaration) {
 
