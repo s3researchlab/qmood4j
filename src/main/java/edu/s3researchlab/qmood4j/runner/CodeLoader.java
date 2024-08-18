@@ -93,7 +93,7 @@ public class CodeLoader {
 
             Path pomFolder = pomFile.getParent();
             Path jarsFolder = pomFolder.resolve(".qmood4j", "dependencies");
-            
+
             if (Files.exists(pomFolder.resolve("src", "main", "java"))) {
                 dependencyFiles.add(pomFolder.resolve("src", "main", "java"));
             } else if (Files.exists(pomFolder.resolve("src", "main"))) {
@@ -112,8 +112,11 @@ public class CodeLoader {
 
     private void downloadEclipseDependencies() {
 
-        if (Files.exists(folder.resolve("src"))) {
-            this.dependencyFiles.add(folder.resolve("src"));
+        if (Files.exists(folder.resolve(".project")) && Files.exists(folder.resolve(".classpath"))) {
+
+            if (Files.exists(folder.resolve("src"))) {
+                this.dependencyFiles.add(folder.resolve("src"));
+            }
         }
     }
 
