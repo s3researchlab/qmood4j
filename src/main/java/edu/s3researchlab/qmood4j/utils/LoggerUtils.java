@@ -34,16 +34,16 @@ public class LoggerUtils {
         LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         Configuration config = ctx.getConfiguration();
 
-        FileAppender errorFA = FileAppender.newBuilder().setName("logToFile").withAppend(false)
+        FileAppender appender = FileAppender.newBuilder().setName("logToFile").withAppend(false)
                 .withFileName(Settings.getOutFolder().resolve("info.log").toString())
                 .setLayout(
                         PatternLayout.newBuilder().withPattern("%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %msg%n").build())
                 .setConfiguration(config).build();
 
-        errorFA.start();
+        appender.start();
 
-        config.addAppender(errorFA);
-        ctx.getRootLogger().addAppender(config.getAppender(errorFA.getName()));
+        config.addAppender(appender);
+        ctx.getRootLogger().addAppender(config.getAppender(appender.getName()));
         ctx.updateLoggers();
     }
 }
