@@ -103,7 +103,7 @@ public class CodeCalculator {
         StringBuilder builder = new StringBuilder();
 
         builder.append("# Folder: %s\n".formatted(Settings.folder));
-        builder.append("# %s\n".formatted(ZonedDateTime.now().toString()));
+        builder.append("# %s\n".formatted(Settings.getDateTimeNow()));
 
         sortedMetricValues.forEach((key, value) -> {
             builder.append("%s = %s\n".formatted(key.getKey(), value));
@@ -117,8 +117,5 @@ public class CodeCalculator {
         }
 
         FileUtils.write(outputFile, content.toString());
-
-//        logger.info(content)
-//        System.out.println(content);
     }
 }

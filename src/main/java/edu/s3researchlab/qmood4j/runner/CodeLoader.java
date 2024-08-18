@@ -92,7 +92,7 @@ public class CodeLoader {
             Model model = MavenUtils.readPomFile(pomFile);
 
             Path pomFolder = pomFile.getParent();
-            Path jarsFolder = pomFolder.resolve(".qmood4j", "dependencies");
+            Path jarsFolder = pomFolder.resolve(Settings.outFolderName, Settings.dependenciesFolderName);
 
             if (Files.exists(pomFolder.resolve("src", "main", "java"))) {
                 dependencyFiles.add(pomFolder.resolve("src", "main", "java"));

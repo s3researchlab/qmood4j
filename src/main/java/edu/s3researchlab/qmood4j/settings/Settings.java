@@ -18,6 +18,8 @@ public class Settings implements IVersionProvider {
     public static long startTime = 0L;
 
     public static String outFolderName = ".qmood4j";
+    
+    public static String dependenciesFolderName = "dependencies";
 
     public static String ignoreFileName = "ignore.txt";
 
@@ -36,11 +38,6 @@ public class Settings implements IVersionProvider {
     public static Path getOutFolder() {
 
         return folder.resolve(outFolderName);
-    }
-
-    public static Path getDependenciesFolder() {
-
-        return folder.resolve(".qmood4j", "dependencies");
     }
 
     public static Path getIgnoreFile() {
