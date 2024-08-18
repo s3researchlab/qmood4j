@@ -112,7 +112,7 @@ public class CodeCalculator {
         String content = builder.toString();
 
         if (outputFile == null) {
-            outputFile = Settings.getDefaultOutputFile();
+            outputFile = Settings.getProjectMetricsOverviewFile();
         }
 
         FileUtils.write(outputFile, content.toString());

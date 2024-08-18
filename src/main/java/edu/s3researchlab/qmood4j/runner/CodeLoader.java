@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.util.Strings;
 import org.apache.maven.model.Model;
 
 import edu.s3researchlab.qmood4j.settings.Settings;
@@ -34,7 +35,10 @@ public class CodeLoader {
 
         logger.debug("Ignoring the following patterns");
 
-        List<String> patterns = FileUtils.readLines(Settings.getIgnoreFile());
+        List<String> patterns = new ArrayList<>();
+
+        patterns.addAll(FileUtils.readLines(Settings.getOutIgnoreFile()));
+        patterns.addAll(FileUtils.readLines(Settings.getProjectIgnoreFile()));
 
         for (int i = 0; i < patterns.size(); i++) {
 
@@ -52,7 +56,7 @@ public class CodeLoader {
 
     public void addIgnore(String pattern) {
 
-        if (pattern.isBlank()) {
+        if (Strings.isBlank(pattern)) {
             return;
         }
 
@@ -80,6 +84,8 @@ public class CodeLoader {
 
         LoggerUtils.section("Processing Maven dependencies");
 
+        Path jarsFolder = Settings.getProjectDependenciesFolder();
+
         List<Path> pomFiles = getFilesFromFolder(folder, "/pom.xml");
 
         for (int i = 0; i < pomFiles.size(); i++) {
@@ -91,7 +97,6 @@ public class CodeLoader {
             Model model = MavenUtils.readPomFile(pomFile);
 
             Path pomFolder = pomFile.getParent();
-            Path jarsFolder = folder.resolve(".qmood4j", "dependencies");
 
             if (Files.exists(pomFolder.resolve("src", "main", "java"))) {
                 dependencyFiles.add(pomFolder.resolve("src", "main", "java"));
@@ -111,11 +116,8 @@ public class CodeLoader {
 
     private void downloadEclipseDependencies() {
 
-        if (Files.exists(folder.resolve(".project"))) {
-
-            if (Files.exists(folder.resolve("src"))) {
-                this.dependencyFiles.add(folder.resolve("src"));
-            }
+        if (Files.exists(folder.resolve("src"))) {
+            this.dependencyFiles.add(folder.resolve("src"));
         }
     }
 
@@ -132,7 +134,7 @@ public class CodeLoader {
 
         LoggerUtils.section("Loading .jar dependency files");
 
-        this.dependencyFiles.addAll(getFilesFromFolder(this.folder, ".jar"));
+        this.dependencyFiles.addAll(getFilesFromFolder(Settings.getProjectDependenciesFolder(), ".jar"));
 
         logger.debug("Completed. Dependencies found: {}", this.dependencyFiles.size());
     }

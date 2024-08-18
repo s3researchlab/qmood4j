@@ -3,11 +3,16 @@ package edu.s3researchlab.qmood4j.utils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.Filter.Result;
 import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.apache.logging.log4j.core.filter.ThresholdFilter;
+import org.apache.logging.log4j.core.layout.PatternLayout;
 
 import edu.s3researchlab.qmood4j.runner.CodeParser;
+import edu.s3researchlab.qmood4j.settings.Settings;
 
 public class LoggerUtils {
 
@@ -64,6 +69,39 @@ public class LoggerUtils {
 
         log.setLevel(level);
 
+        ctx.updateLoggers();
+    }
+
+    public static void setAppenders() {
+        
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        Configuration config = ctx.getConfiguration();
+        
+        FileAppender errorFA = FileAppender.newBuilder()
+                .setName("LogErrorToFile")
+                .withAppend(false)
+                .setFilter(ThresholdFilter.createFilter(Level.ERROR, Result.ACCEPT, Result.DENY))
+                .withFileName(Settings.getProjectFolder().resolve("error.log").toString())
+                .setLayout(PatternLayout.newBuilder().withPattern("%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %msg%n").build())
+                .setConfiguration(config).build();
+       
+        FileAppender debugFA = FileAppender.newBuilder()
+                .setName("LogDebugToFile")
+                .withAppend(false)
+                .setFilter(ThresholdFilter.createFilter(Level.DEBUG, Result.ACCEPT, Result.DENY))
+                .withFileName(Settings.getProjectFolder().resolve("debug.log").toString())
+                .setLayout(PatternLayout.newBuilder().withPattern("%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %msg%n").build())
+                .setConfiguration(config).build();
+        
+        errorFA.start();
+        debugFA.start();
+        
+        config.addAppender(errorFA);
+        config.addAppender(debugFA);
+        
+        ctx.getRootLogger().addAppender(config.getAppender(errorFA.getName()));
+        ctx.getRootLogger().addAppender(config.getAppender(debugFA.getName()));
+        
         ctx.updateLoggers();
     }
 }

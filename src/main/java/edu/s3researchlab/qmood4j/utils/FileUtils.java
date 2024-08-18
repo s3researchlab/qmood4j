@@ -77,12 +77,27 @@ public class FileUtils {
         return false;
     }
 
-    public static void createFolder(Path folder) {
+    private static void createEmptyFileIfNotExists(Path file) {
+
+        checkNotNull(file);
 
         try {
+            if (!Files.exists(file)) {
+                file.toFile().createNewFile();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-            Files.createDirectories(folder);
+    public static void createFolderIfNotExists(Path folder) {
 
+        checkNotNull(folder);
+
+        try {
+            if (!Files.exists(folder)) {
+                Files.createDirectories(folder);
+            }
         } catch (IOException e) {
             new RuntimeException(e);
         }
@@ -137,14 +152,19 @@ public class FileUtils {
 
     public static void write(Path outputFile, String content) {
 
+        System.out.println(outputFile);
         checkNotNull(outputFile);
 
         if (content == null) {
             content = "";
         }
 
+        createEmptyFileIfNotExists(outputFile);
+
         try {
+
             Files.writeString(outputFile, content);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

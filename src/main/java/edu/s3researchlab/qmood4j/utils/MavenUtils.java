@@ -52,7 +52,7 @@ public class MavenUtils {
 
             logger.debug("Downloading .jar dependency files");
 
-            FileUtils.createFolder(jarsFolder);
+            FileUtils.createFolderIfNotExists(jarsFolder);
 
             Path pomFile = model.getPomFile().toPath();
 

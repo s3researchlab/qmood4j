@@ -28,7 +28,7 @@ public class MainClass implements Callable<Integer> {
     private Path folder;
 
     @Option(names = { "-o",
-            "--output" }, description = "the output file with qmood metrics (default: /{folder}/qmood.properties")
+            "--output" }, description = "the output file with qmood metrics (default: /{folder}/qmood4j.properties")
     private Path outputFile = null;
 
     @Option(names = { "-a",
@@ -77,9 +77,7 @@ public class MainClass implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        Settings.folder = folder;
-
-        Settings.init();
+        Settings.init(folder);
 
         LoggerUtils.section("Scanning folder: " + folder);
 
