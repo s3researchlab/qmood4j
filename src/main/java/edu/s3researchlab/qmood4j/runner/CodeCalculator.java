@@ -96,10 +96,16 @@ public class CodeCalculator {
 
         LoggerUtils.section("Results");
 
-        StringBuilder overviewBuilder = new StringBuilder();
-       
-        overviewBuilder.append("# Folder: %s\n".formatted(Settings.folder));
-        overviewBuilder.append("# %s\n".formatted(Settings.getDateTimeNow()));
+        FileUtils.write(Settings.getMetricsOverviewFile(), generateOverviewMetrics());
+        FileUtils.write(Settings.getMetricsDetailedFile(), generateDetailedMetrics());
+    }
+    
+    private String generateOverviewMetrics() {
+        
+        StringBuilder builder = new StringBuilder();
+        
+        builder.append("# Folder: %s\n".formatted(Settings.folder));
+        builder.append("# %s\n".formatted(Settings.getDateTimeNow()));
 
         for (Metric metric : this.metrics) {
 
@@ -109,12 +115,11 @@ public class CodeCalculator {
 
             String output = "%s = %s".formatted(name.getKey(), value);
 
-            overviewBuilder.append(output + "\n");
+            builder.append(output + "\n");
             logger.info(output);
         }
-
-        FileUtils.write(Settings.getMetricsOverviewFile(), overviewBuilder.toString());
-        FileUtils.write(Settings.getMetricsDetailedFile(), generateDetailedMetrics());
+        
+        return builder.toString();
     }
 
     private String generateDetailedMetrics() {
