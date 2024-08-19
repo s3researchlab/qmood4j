@@ -19,7 +19,7 @@ public abstract class Metric {
             
             double value = calculate(pm, cm);
             
-            cm.metricValues.put(getName(), value);
+            cm.metrics.put(getName(), value);
             
             total += value;
         }

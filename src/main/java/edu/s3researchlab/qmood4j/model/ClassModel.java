@@ -22,7 +22,7 @@ public class ClassModel {
 
     private List<ConstructorDeclaration> constructors;
     
-    public Map<MetricName, Double> metricValues = new EnumMap<>(MetricName.class);
+    public Map<MetricName, Double> metrics = new EnumMap<>(MetricName.class);
 
     public ClassModel(ClassOrInterfaceDeclaration classDeclaration) {
 

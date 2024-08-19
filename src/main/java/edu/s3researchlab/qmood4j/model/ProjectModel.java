@@ -28,7 +28,7 @@ public class ProjectModel {
 
     private MutableGraph<String> extendsGraph = GraphBuilder.directed().build();
 
-    private Map<MetricName, Double> metricValues = new EnumMap<>(MetricName.class);
+    public Map<MetricName, Double> metrics = new EnumMap<>(MetricName.class);
     
     public void addClassModel(ClassOrInterfaceDeclaration clsDecl) {
         
@@ -60,10 +60,6 @@ public class ProjectModel {
         }
     }
     
-    public Map<MetricName, Double> getMetricValues() {
-        return this.metricValues;
-    }
-
     public int getNumberOfClasses() {
         return this.classModels.size();
     }
