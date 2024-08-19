@@ -15,7 +15,10 @@ public class Flexibility extends Metric {
     @Override
     public double calculate(ProjectModel pm) {
 
-        Map<MetricName, Double> mv = pm.getMetricValues();
+        return calculate(pm.getMetricValues());
+    }
+    
+    public double calculate(Map<MetricName, Double> mv) {
 
         double encapsulation = mv.getOrDefault(MetricName.ENCAPSULATION, 0.0);
         double coupling = mv.getOrDefault(MetricName.COUPLING, 0.0);

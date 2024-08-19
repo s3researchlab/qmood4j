@@ -15,7 +15,10 @@ public class Reusability extends Metric {
     @Override
     public double calculate(ProjectModel pm) {
 
-        Map<MetricName, Double> mv = pm.getMetricValues();
+        return calculate(pm.getMetricValues());
+    }
+
+    public double calculate(Map<MetricName, Double> mv) {
 
         double coupling = mv.getOrDefault(MetricName.COUPLING, 0.0);
         double cohesion = mv.getOrDefault(MetricName.COHESION, 0.0);

@@ -15,7 +15,10 @@ public class TotalQualityIndex extends Metric {
     @Override
     public double calculate(ProjectModel pm) {
 
-        Map<MetricName, Double> mv = pm.getMetricValues();
+        return calculate(pm.getMetricValues());
+    }
+    
+    public double calculate(Map<MetricName, Double> mv) {
 
         double reusability = mv.getOrDefault(MetricName.REUSABILITY, 0.0);
         double flexibility = mv.getOrDefault(MetricName.FLEXIBILITY, 0.0);

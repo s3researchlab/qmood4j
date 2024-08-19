@@ -93,7 +93,17 @@ public class CodeCalculator {
 
             logger.info("({}/{}) Calculating values for {}", counter++, metrics.size(), metric.getName().getKey());
         }
-
+        
+        for (ClassModel cm : projectModel.getClassModels().values()) {
+            cm.metricValues.put(MetricName.REUSABILITY, new Reusability().calculate(cm.metricValues));     
+            cm.metricValues.put(MetricName.FLEXIBILITY, new Flexibility().calculate(cm.metricValues));     
+            cm.metricValues.put(MetricName.UNDERSTANDABILITY, new Understandability().calculate(cm.metricValues)); 
+            cm.metricValues.put(MetricName.FUNCTIONALITY, new Functionality().calculate(cm.metricValues));     
+            cm.metricValues.put(MetricName.EXTENDIBILITY, new Extendibility().calculate(cm.metricValues));     
+            cm.metricValues.put(MetricName.EFFECTIVENESS, new Effectiveness().calculate(cm.metricValues)); 
+            cm.metricValues.put(MetricName.TQI, new TotalQualityIndex().calculate(cm.metricValues)); 
+        }
+      
         LoggerUtils.section("Results");
 
         FileUtils.write(Settings.getMetricsOverviewFile(), generateOverviewMetrics());

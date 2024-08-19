@@ -15,7 +15,10 @@ public class Understandability extends Metric {
     @Override
     public double calculate(ProjectModel pm) {
 
-        Map<MetricName, Double> mv = pm.getMetricValues();
+        return calculate(pm.getMetricValues());
+    }
+    
+    public double calculate(Map<MetricName, Double> mv) {
 
         double abstraction = mv.getOrDefault(MetricName.ABSTRACTION, 0.0);
         double encapsulation = mv.getOrDefault(MetricName.ENCAPSULATION, 0.0);

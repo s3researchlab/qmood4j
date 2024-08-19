@@ -11,11 +11,14 @@ public class Functionality extends Metric {
     public MetricName getName() {
         return MetricName.FUNCTIONALITY;
     }
-
+    
     @Override
     public double calculate(ProjectModel pm) {
 
-        Map<MetricName, Double> mv = pm.getMetricValues();
+        return calculate(pm.getMetricValues());
+    }
+
+    public double calculate(Map<MetricName, Double> mv) {
 
         double cohesion = mv.getOrDefault(MetricName.COHESION, 0.0);
         double polymorphism = mv.getOrDefault(MetricName.POLYMORPHISM, 0.0);
