@@ -25,12 +25,6 @@ mvn --version
 
 ## Design Metrics
 
-### Design Size in Classes (DSC)
-
- - **Design Property:** Design Size
- - **Description:** A measure of the number of classes used in a design
- - **Interpreted as:** It is the total number of user-defined classes (not interfaces) in the design, excluding both imported libraries and standard Java classes
- - **Calculated As:** Number
 
 ### Number of Hierarchies (NOH)
 

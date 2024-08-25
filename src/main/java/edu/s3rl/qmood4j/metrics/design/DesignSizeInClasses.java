@@ -9,6 +9,7 @@ import edu.s3rl.qmood4j.model.ProjectModel;
  * 
  * @author Thiago Ferreira
  * @since July 2024
+ * @see <a href="https://github.com/s3researchlab/qmood4j/wiki/Design-Size-in-Classes-(DSC)">Wiki</a>
  */
 public class DesignSizeInClasses extends Metric {
 
