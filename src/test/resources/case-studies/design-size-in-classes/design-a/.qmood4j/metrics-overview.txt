@@ -1,5 +1,5 @@
-# Folder: /Users/thiagodnf/Workspace/qmood4j/src/test/resources/case-studies/design-size-in-classes/project-a
-# Sun, 25 Aug 2024 10:20:13 -0400
+# Folder: src/test/resources/case-studies/design-size-in-classes/design-a
+# Sun, 25 Aug 2024 16:47:24 -0400
 qmood.design.abstraction = 0.0
 qmood.design.cohesion = 0.0
 qmood.design.complexity = 0.0

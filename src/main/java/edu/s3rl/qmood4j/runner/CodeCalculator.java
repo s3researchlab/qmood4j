@@ -52,6 +52,11 @@ public class CodeCalculator {
         }
     });
 
+    public CodeCalculator(CodeParser parser) {
+
+        this(parser, null);
+    }
+
     public CodeCalculator(CodeParser parser, Path outputFile) {
 
         this.projectModel = parser.getProjectModel();
@@ -93,27 +98,27 @@ public class CodeCalculator {
 
             logger.info("({}/{}) Calculating values for {}", counter++, metrics.size(), metric.getName().getKey());
         }
-        
+
         for (ClassModel cm : projectModel.getClassModels().values()) {
-            cm.metrics.put(MetricName.REUSABILITY, new Reusability().calculate(cm.metrics));     
-            cm.metrics.put(MetricName.FLEXIBILITY, new Flexibility().calculate(cm.metrics));     
-            cm.metrics.put(MetricName.UNDERSTANDABILITY, new Understandability().calculate(cm.metrics)); 
-            cm.metrics.put(MetricName.FUNCTIONALITY, new Functionality().calculate(cm.metrics));     
-            cm.metrics.put(MetricName.EXTENDIBILITY, new Extendibility().calculate(cm.metrics));     
-            cm.metrics.put(MetricName.EFFECTIVENESS, new Effectiveness().calculate(cm.metrics)); 
-            cm.metrics.put(MetricName.TQI, new TotalQualityIndex().calculate(cm.metrics)); 
+            cm.metrics.put(MetricName.REUSABILITY, new Reusability().calculate(cm.metrics));
+            cm.metrics.put(MetricName.FLEXIBILITY, new Flexibility().calculate(cm.metrics));
+            cm.metrics.put(MetricName.UNDERSTANDABILITY, new Understandability().calculate(cm.metrics));
+            cm.metrics.put(MetricName.FUNCTIONALITY, new Functionality().calculate(cm.metrics));
+            cm.metrics.put(MetricName.EXTENDIBILITY, new Extendibility().calculate(cm.metrics));
+            cm.metrics.put(MetricName.EFFECTIVENESS, new Effectiveness().calculate(cm.metrics));
+            cm.metrics.put(MetricName.TQI, new TotalQualityIndex().calculate(cm.metrics));
         }
-      
+
         LoggerUtils.section("Results");
 
         FileUtils.write(Settings.getMetricsOverviewFile(), generateOverviewMetrics());
         FileUtils.write(Settings.getMetricsDetailedFile(), generateDetailedMetrics());
     }
-    
+
     private String generateOverviewMetrics() {
-        
+
         StringBuilder builder = new StringBuilder();
-        
+
         builder.append("# Folder: %s\n".formatted(Settings.folder));
         builder.append("# %s\n".formatted(Settings.getDateTimeNow()));
 
@@ -128,7 +133,7 @@ public class CodeCalculator {
             builder.append(output + "\n");
             logger.info(output);
         }
-        
+
         return builder.toString();
     }
 
