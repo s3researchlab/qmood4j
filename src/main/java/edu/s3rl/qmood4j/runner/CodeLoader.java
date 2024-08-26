@@ -28,14 +28,12 @@ public class CodeLoader {
     private List<Path> javaFiles = new ArrayList<>();
 
     private List<Path> dependencyFiles = new ArrayList<>();
-
-    public CodeLoader(Path folder) {
+    
+    public CodeLoader(Path folder, List<String> patterns) {
 
         this.folder = folder;
 
         logger.info("Ignoring the following patterns");
-
-        List<String> patterns = FileUtils.readLines(Settings.getIgnoreFile());
 
         for (int i = 0; i < patterns.size(); i++) {
 

@@ -2,6 +2,7 @@ package edu.s3rl.qmood4j;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +12,7 @@ import edu.s3rl.qmood4j.runner.CodeCalculator;
 import edu.s3rl.qmood4j.runner.CodeLoader;
 import edu.s3rl.qmood4j.runner.CodeParser;
 import edu.s3rl.qmood4j.settings.Settings;
+import edu.s3rl.qmood4j.utils.FileUtils;
 import edu.s3rl.qmood4j.utils.LoggerUtils;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -36,13 +38,16 @@ public class MainClass implements Callable<Integer> {
 
     @Option(names = { "-a",
             "--always-download" }, description = "always download all dependencies (default: ${DEFAULT-VALUE})")
-    private boolean alwaysDownload = false;
+    private boolean alwaysDownload = true;
 
     @Option(names = { "--help" }, usageHelp = true, description = "display the help menu")
     private boolean helpRequested = false;
 
     @Option(names = { "--version" }, versionHelp = true, description = "print version information and exit")
     private boolean versionRequested = false;
+    
+    @Option(names = { "-i", "--ignore" }, split = ",", description = "the list of ignore patterns")
+    private List<String> ignores = Settings.getDefaultIgnore();
 
     @Parameters(paramLabel = "folder", description = "the folder with the source code")
     public void setFolder(Path folder) {
@@ -72,11 +77,13 @@ public class MainClass implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
+        System.out.println(FileUtils.getCacheFolder());
+
         Settings.init(folder);
 
         LoggerUtils.section("Scanning folder: " + folder);
 
-        CodeLoader loader = new CodeLoader(folder);
+        CodeLoader loader = new CodeLoader(folder, ignores);
 
         loader.setAlwaysDownload(alwaysDownload);
 
