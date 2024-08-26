@@ -20,7 +20,7 @@ public class DesignSizeInClassesTest {
         
         Settings.folder = folder;
         
-        CodeLoader loader = new CodeLoader(folder);
+        CodeLoader loader = new CodeLoader(folder, null);
 
         loader.load();
 
