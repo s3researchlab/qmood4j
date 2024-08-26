@@ -1,10 +1,12 @@
 package edu.s3rl.qmood4j.utils;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
 import edu.s3rl.qmood4j.runner.CodeParser;
@@ -27,6 +29,19 @@ public class LoggerUtils {
         logger.info(LoggerUtils.separator);
         logger.info(sectionName, params);
         logger.info(LoggerUtils.separator);
+    }
+
+    public static void setEnabled(boolean enabled) {
+
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+
+        if (enabled) {
+            Configurator.setRootLevel(Level.INFO);
+        } else {
+            Configurator.setRootLevel(Level.OFF);
+        }
+
+        ctx.updateLoggers();
     }
 
     public static void setAppenders() {
