@@ -8,10 +8,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hashing;
+import com.google.common.io.ByteSource;
 
 public class FileUtils {
 
@@ -77,7 +82,7 @@ public class FileUtils {
         return false;
     }
 
-    private static void createEmptyFileIfNotExists(Path file) {
+    public static void createEmptyFileIfNotExists(Path file) {
 
         checkNotNull(file);
 
@@ -90,7 +95,7 @@ public class FileUtils {
         }
     }
 
-    public static void createFolderIfNotExists(Path folder) {
+    public static Path createFolderIfNotExists(Path folder) {
 
         checkNotNull(folder);
 
@@ -101,6 +106,8 @@ public class FileUtils {
         } catch (IOException e) {
             new RuntimeException(e);
         }
+
+        return folder;
     }
 
     public static void deleteFolderRecursively(Path folder) {
@@ -136,9 +143,13 @@ public class FileUtils {
         }
     }
 
-    public static Path getCurrentFolder() {
+    public static String readContent(Path file) {
 
-        return Paths.get(System.getProperty("user.dir"));
+        try {
+            return Files.readString(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static List<String> readIgnoreFile(Path ignoreFile) {
@@ -163,6 +174,58 @@ public class FileUtils {
         try {
 
             Files.writeString(outputFile, content);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static Path getCurrentFolder() {
+
+        return Paths.get(System.getProperty("user.dir"));
+    }
+
+    public static Path getUserFolder() {
+
+        return Paths.get(System.getProperty("user.home")).resolve(".qmood4j");
+    }
+
+    public static Path getCacheFolder() {
+
+        Path cacheFolder = getUserFolder().resolve("cache");
+
+        return createFolderIfNotExists(cacheFolder);
+    }
+
+    public static String checksum(Path file) {
+
+        try {
+
+            ByteSource byteSource = com.google.common.io.Files.asByteSource(file.toFile());
+
+            HashCode hc = byteSource.hash(Hashing.sha256());
+
+            return hc.toString();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void writeAsAppend(Path outputFile, String content) {
+
+        checkNotNull(outputFile);
+
+        if (content == null) {
+            content = "";
+        }
+
+        createEmptyFileIfNotExists(outputFile);
+
+        try {
+
+            Files.writeString(outputFile, content, StandardOpenOption.APPEND);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
