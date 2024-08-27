@@ -38,7 +38,7 @@ public class MainClass implements Callable<Integer> {
 
     @Option(names = { "-a",
             "--always-download" }, description = "always download all dependencies (default: ${DEFAULT-VALUE})")
-    private boolean alwaysDownload = true;
+    private boolean alwaysDownload = false;
 
     @Option(names = { "--help" }, usageHelp = true, description = "display the help menu")
     private boolean helpRequested = false;
@@ -76,8 +76,6 @@ public class MainClass implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-
-        System.out.println(FileUtils.getCacheFolder());
 
         Settings.init(folder);
 

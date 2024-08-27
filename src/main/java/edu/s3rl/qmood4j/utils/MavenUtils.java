@@ -48,20 +48,19 @@ public class MavenUtils {
 
     public static void downloadDependencies(Model model, Path jarsFolder) {
 
-        if (!Files.exists(jarsFolder)) {
+        
+        logger.debug("Downloading .jar dependency files");
 
-            logger.debug("Downloading .jar dependency files");
+        FileUtils.createFolderIfNotExists(jarsFolder);
 
-            FileUtils.createFolderIfNotExists(jarsFolder);
+        Path pomFile = model.getPomFile().toPath();
 
-            Path pomFile = model.getPomFile().toPath();
-
-            downloadJarsFile(pomFile, jarsFolder, model.getDependencies());
-            
-            if (model.getDependencyManagement() != null) {
-                downloadJarsFile(pomFile, jarsFolder, model.getDependencyManagement().getDependencies());
-            }
+        downloadJarsFile(pomFile, jarsFolder, model.getDependencies());
+        
+        if (model.getDependencyManagement() != null) {
+            downloadJarsFile(pomFile, jarsFolder, model.getDependencyManagement().getDependencies());
         }
+        
     }
     
     private static void downloadJarsFile(Path pomFile, Path jarsFolder, List<Dependency> dependencies) {

@@ -28,7 +28,7 @@ public class CodeLoader {
     private List<Path> javaFiles = new ArrayList<>();
 
     private List<Path> dependencyFiles = new ArrayList<>();
-    
+
     public CodeLoader(Path folder, List<String> patterns) {
 
         this.folder = folder;
@@ -71,7 +71,7 @@ public class CodeLoader {
     public void load() {
         this.downloadMavenDependencies();
         this.downloadEclipseDependencies();
-        this.loadDependencyFiles();
+//        this.loadDependencyFiles();
         this.loadJavaFiles();
     }
 
@@ -90,7 +90,6 @@ public class CodeLoader {
             Model model = MavenUtils.readPomFile(pomFile);
 
             Path pomFolder = pomFile.getParent();
-            Path jarsFolder = pomFolder.resolve(Settings.outFolderName, Settings.dependenciesFolderName);
 
             if (Files.exists(pomFolder.resolve("src", "main", "java"))) {
                 dependencyFiles.add(pomFolder.resolve("src", "main", "java"));
@@ -100,11 +99,22 @@ public class CodeLoader {
                 dependencyFiles.add(pomFolder.resolve("src"));
             }
 
+            String checkSum = FileUtils.checksum(pomFile);
+
+            Path jarsFolder = FileUtils.getCacheFolder().resolve("pom-files", checkSum);
+
             if (alwaysDownload) {
                 FileUtils.deleteFolderRecursively(jarsFolder);
+            } 
+            
+            if (!Files.exists(jarsFolder)) {
+
+                FileUtils.createFolderIfNotExists(jarsFolder);
+
+                MavenUtils.downloadDependencies(model, jarsFolder);
             }
 
-            MavenUtils.downloadDependencies(model, jarsFolder);
+            this.dependencyFiles.addAll(getFilesFromFolder(jarsFolder, ".jar"));                       
         }
     }
 
@@ -127,14 +137,14 @@ public class CodeLoader {
         logger.info("Completed. Java files found: {}", this.javaFiles.size());
     }
 
-    private void loadDependencyFiles() {
-
-        LoggerUtils.section("Loading .jar dependency files");
-
-        this.dependencyFiles.addAll(getFilesFromFolder(this.folder, ".jar"));
-
-        logger.info("Completed. Dependencies found: {}", this.dependencyFiles.size());
-    }
+//    private void loadDependencyFiles() {
+//
+//        LoggerUtils.section("Loading .jar dependency files");
+//
+////        this.dependencyFiles.addAll(getFilesFromFolder(this.folder, ".jar"));
+//
+//        logger.info("Completed. Dependencies found: {}", this.dependencyFiles.size());
+//    }
 
     private List<Path> getFilesFromFolder(Path folder, String fileExtension) {
 

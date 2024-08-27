@@ -112,6 +112,10 @@ public class FileUtils {
 
     public static void deleteFolderRecursively(Path folder) {
 
+        if (!Files.exists(folder)) {
+            return;
+        }
+
         try {
 
             Files.walkFileTree(folder, new SimpleFileVisitor<Path>() {
@@ -195,7 +199,8 @@ public class FileUtils {
 
         Path cacheFolder = getUserFolder().resolve("cache");
 
-        return createFolderIfNotExists(cacheFolder);
+        return cacheFolder;
+//        return createFolderIfNotExists(cacheFolder);
     }
 
     public static String checksum(Path file) {
