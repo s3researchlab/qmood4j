@@ -12,7 +12,6 @@ import edu.s3rl.qmood4j.runner.CodeCalculator;
 import edu.s3rl.qmood4j.runner.CodeLoader;
 import edu.s3rl.qmood4j.runner.CodeParser;
 import edu.s3rl.qmood4j.settings.Settings;
-import edu.s3rl.qmood4j.utils.FileUtils;
 import edu.s3rl.qmood4j.utils.LoggerUtils;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -35,10 +34,6 @@ public class MainClass implements Callable<Integer> {
     @Option(names = { "-o",
             "--output" }, description = "the output file with qmood metrics (default: /{folder}/qmood4j.properties")
     private Path outputFile = null;
-
-    @Option(names = { "-a",
-            "--always-download" }, description = "always download all dependencies (default: ${DEFAULT-VALUE})")
-    private boolean alwaysDownload = false;
 
     @Option(names = { "--help" }, usageHelp = true, description = "display the help menu")
     private boolean helpRequested = false;
@@ -82,8 +77,6 @@ public class MainClass implements Callable<Integer> {
         LoggerUtils.section("Scanning folder: " + folder);
 
         CodeLoader loader = new CodeLoader(folder, ignores);
-
-        loader.setAlwaysDownload(alwaysDownload);
 
         loader.load();
 

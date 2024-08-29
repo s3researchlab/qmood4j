@@ -3,13 +3,10 @@ package edu.s3rl.qmood4j.utils;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -110,34 +107,6 @@ public class FileUtils {
         return folder;
     }
 
-    public static void deleteFolderRecursively(Path folder) {
-
-        if (!Files.exists(folder)) {
-            return;
-        }
-
-        try {
-
-            Files.walkFileTree(folder, new SimpleFileVisitor<Path>() {
-
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    Files.delete(dir);
-                    return FileVisitResult.CONTINUE;
-                }
-
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.delete(file);
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static List<String> readLines(Path file) {
 
         try {
@@ -197,12 +166,14 @@ public class FileUtils {
 
     public static Path getCacheFolder() {
 
-        Path cacheFolder = getUserFolder().resolve("cache");
-
-        return cacheFolder;
-//        return createFolderIfNotExists(cacheFolder);
+        return getUserFolder().resolve("cache");
     }
+    
+    public static Path getCacheForPomFilesFolder(String checkSum) {
 
+        return FileUtils.getCacheFolder().resolve("pom-files", checkSum);
+    }
+    
     public static String checksum(Path file) {
 
         try {

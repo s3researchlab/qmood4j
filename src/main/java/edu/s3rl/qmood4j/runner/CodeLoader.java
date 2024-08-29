@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.maven.model.Model;
 
-import edu.s3rl.qmood4j.settings.Settings;
 import edu.s3rl.qmood4j.utils.FileUtils;
 import edu.s3rl.qmood4j.utils.LoggerUtils;
 import edu.s3rl.qmood4j.utils.MavenUtils;
@@ -20,8 +19,6 @@ public class CodeLoader {
     private static Logger logger = LogManager.getLogger(CodeLoader.class);
 
     private Path folder;
-
-    private boolean alwaysDownload = false;
 
     private List<String> ignore = new ArrayList<>();
 
@@ -43,10 +40,6 @@ public class CodeLoader {
 
             logger.info("({}/{}) Pattern ignored: {}", i + 1, patterns.size(), pattern);
         }
-    }
-
-    public void setAlwaysDownload(boolean alwaysDownload) {
-        this.alwaysDownload = alwaysDownload;
     }
 
     public void addIgnore(String pattern) {
@@ -71,7 +64,6 @@ public class CodeLoader {
     public void load() {
         this.downloadMavenDependencies();
         this.downloadEclipseDependencies();
-//        this.loadDependencyFiles();
         this.loadJavaFiles();
     }
 
@@ -101,11 +93,7 @@ public class CodeLoader {
 
             String checkSum = FileUtils.checksum(pomFile);
 
-            Path jarsFolder = FileUtils.getCacheFolder().resolve("pom-files", checkSum);
-
-            if (alwaysDownload) {
-                FileUtils.deleteFolderRecursively(jarsFolder);
-            } 
+            Path jarsFolder = FileUtils.getCacheForPomFilesFolder(checkSum);
             
             if (!Files.exists(jarsFolder)) {
 
@@ -123,6 +111,7 @@ public class CodeLoader {
         if (Files.exists(folder.resolve(".project")) && Files.exists(folder.resolve(".classpath"))) {
 
             if (Files.exists(folder.resolve("src"))) {
+                
                 this.dependencyFiles.add(folder.resolve("src"));
             }
         }
@@ -136,15 +125,6 @@ public class CodeLoader {
 
         logger.info("Completed. Java files found: {}", this.javaFiles.size());
     }
-
-//    private void loadDependencyFiles() {
-//
-//        LoggerUtils.section("Loading .jar dependency files");
-//
-////        this.dependencyFiles.addAll(getFilesFromFolder(this.folder, ".jar"));
-//
-//        logger.info("Completed. Dependencies found: {}", this.dependencyFiles.size());
-//    }
 
     private List<Path> getFilesFromFolder(Path folder, String fileExtension) {
 
