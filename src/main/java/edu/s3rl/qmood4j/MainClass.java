@@ -37,8 +37,8 @@ public class MainClass implements Callable<Integer> {
     @Option(names = { "--version" }, versionHelp = true, description = "print version information and exit")
     private boolean versionRequested = false;
     
-    @Option(names = { "-i", "--ignore" }, split = ",", description = "the list of ignore patterns")
-    private List<String> ignores = Settings.getDefaultIgnore();
+    @Option(names = { "-e", "--exclude" }, split = ",", description = "the list of folders/files to exclude")
+    private List<String> exclude = Settings.getDefaultExclude();
 
     @Parameters(paramLabel = "folder", description = "the folder with the source code")
     public void setFolder(Path folder) {
@@ -72,7 +72,7 @@ public class MainClass implements Callable<Integer> {
 
         LoggerUtils.section("Scanning folder: " + folder);
 
-        CodeLoader loader = new CodeLoader(folder, ignores);
+        CodeLoader loader = new CodeLoader(folder, exclude);
 
         loader.load();
 

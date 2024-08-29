@@ -20,35 +20,30 @@ public class CodeLoader {
 
     private Path folder;
 
-    private List<String> ignore = new ArrayList<>();
+    private List<String> exclude = new ArrayList<>();
 
     private List<Path> javaFiles = new ArrayList<>();
 
     private List<Path> dependencyFiles = new ArrayList<>();
 
-    public CodeLoader(Path folder, List<String> patterns) {
+    public CodeLoader(Path folder, List<String> exclude) {
 
         this.folder = folder;
 
         logger.info("Ignoring the following patterns");
 
-        for (int i = 0; i < patterns.size(); i++) {
+        for (int i = 0; i < exclude.size(); i++) {
 
-            String pattern = patterns.get(i);
+            String item = exclude.get(i);
 
-            this.addIgnore(pattern);
+            if (Strings.isBlank(item)) {
+                continue;
+            }
 
-            logger.info("({}/{}) Pattern ignored: {}", i + 1, patterns.size(), pattern);
+            this.exclude.add(item);
+
+            logger.info("({}/{}) Pattern ignored: {}", i + 1, exclude.size(), item);
         }
-    }
-
-    public void addIgnore(String pattern) {
-
-        if (Strings.isBlank(pattern)) {
-            return;
-        }
-
-        this.ignore.add(pattern);
     }
 
     public List<Path> getJavaFiles() {
@@ -128,7 +123,7 @@ public class CodeLoader {
 
     private List<Path> getFilesFromFolder(Path folder, String fileExtension) {
 
-        return FileUtils.getFilesFromFolder(folder, this.ignore, fileExtension);
+        return FileUtils.getFilesFromFolder(folder, this.exclude, fileExtension);
     }
 
 }

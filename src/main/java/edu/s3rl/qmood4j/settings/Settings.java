@@ -35,7 +35,7 @@ public class Settings implements IVersionProvider {
         return DateTimeFormatter.RFC_1123_DATE_TIME.format(dateTimeNow);
     }
 
-    public static List<String> getDefaultIgnore() {
+    public static List<String> getDefaultExclude() {
 
         return List.of(".*module-info.java", ".*package-info.java", ".*/target/.*", ".*/test/.*");
     }
