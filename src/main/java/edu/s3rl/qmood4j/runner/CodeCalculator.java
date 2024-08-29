@@ -42,7 +42,7 @@ public class CodeCalculator {
 
     private ProjectModel projectModel;
 
-    private Path outputFile;
+    private Path folder;
 
     private Set<Metric> metrics = new TreeSet<>(new Comparator<Metric>() {
 
@@ -57,10 +57,10 @@ public class CodeCalculator {
         this(parser, null);
     }
 
-    public CodeCalculator(CodeParser parser, Path outputFile) {
+    public CodeCalculator(CodeParser parser, Path folder) {
 
         this.projectModel = parser.getProjectModel();
-        this.outputFile = outputFile;
+        this.folder = folder;
 
         // Design Metrics
         this.metrics.add(new DesignSizeInClasses());
@@ -111,15 +111,15 @@ public class CodeCalculator {
 
         LoggerUtils.section("Results");
 
-        FileUtils.write(Settings.getMetricsOverviewFile(), generateOverviewMetrics());
-        FileUtils.write(Settings.getMetricsDetailedFile(), generateDetailedMetrics());
+        FileUtils.write(FileUtils.getMetricsOverviewFile(), generateOverviewMetrics());
+        FileUtils.write(FileUtils.getMetricsDetailedFile(), generateDetailedMetrics());
     }
 
     private String generateOverviewMetrics() {
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append("# Folder: %s\n".formatted(Settings.folder));
+        builder.append("# Folder: %s\n".formatted(folder));
         builder.append("# %s\n".formatted(Settings.getDateTimeNow()));
 
         for (Metric metric : this.metrics) {
@@ -132,6 +132,7 @@ public class CodeCalculator {
 
             builder.append(output + "\n");
             logger.info(output);
+            System.out.println(output);
         }
 
         return builder.toString();

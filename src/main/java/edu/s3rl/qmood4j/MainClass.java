@@ -31,10 +31,6 @@ public class MainClass implements Callable<Integer> {
 
     private Path folder;
 
-    @Option(names = { "-o",
-            "--output" }, description = "the output file with qmood metrics (default: /{folder}/qmood4j.properties")
-    private Path outputFile = null;
-
     @Option(names = { "--help" }, usageHelp = true, description = "display the help menu")
     private boolean helpRequested = false;
 
@@ -72,7 +68,7 @@ public class MainClass implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
 
-        Settings.init(folder);
+        Settings.init();
 
         LoggerUtils.section("Scanning folder: " + folder);
 
@@ -84,7 +80,7 @@ public class MainClass implements Callable<Integer> {
 
         parser.parse();
 
-        CodeCalculator calculator = new CodeCalculator(parser, outputFile);
+        CodeCalculator calculator = new CodeCalculator(parser, folder);
 
         calculator.calculate();
 

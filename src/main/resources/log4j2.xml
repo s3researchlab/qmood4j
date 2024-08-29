@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
     <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%p] %m%n" />
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%m%n" />
+            <Filters>
+                <ThresholdFilter level="debug" onMatch="DENY" onMismatch="DENY" />
+            </Filters>
         </Console>
+        <File name="file-appender" fileName="${sys:user.home}/.qmood4j/app.log">
+            <PatternLayout pattern="[%p] %m%n" />
+            <Filters>
+                <ThresholdFilter level="all" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+        </File>
     </Appenders>
     <Loggers>
         <Root level="info">
-            <AppenderRef ref="Console" />
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file-appender" />
         </Root>
     </Loggers>
 </Configuration>

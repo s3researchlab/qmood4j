@@ -4,13 +4,9 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.appender.FileAppender;
-import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.Configurator;
-import org.apache.logging.log4j.core.layout.PatternLayout;
 
 import edu.s3rl.qmood4j.runner.CodeParser;
-import edu.s3rl.qmood4j.settings.Settings;
 
 public class LoggerUtils {
 
@@ -41,24 +37,6 @@ public class LoggerUtils {
             Configurator.setRootLevel(Level.OFF);
         }
 
-        ctx.updateLoggers();
-    }
-
-    public static void setAppenders() {
-
-        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-        Configuration config = ctx.getConfiguration();
-
-        FileAppender appender = FileAppender.newBuilder().setName("logToFile").withAppend(false)
-                .withFileName(Settings.getOutFolder().resolve("info.log").toString())
-                .setLayout(
-                        PatternLayout.newBuilder().withPattern("%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %msg%n").build())
-                .setConfiguration(config).build();
-
-        appender.start();
-
-        config.addAppender(appender);
-        ctx.getRootLogger().addAppender(config.getAppender(appender.getName()));
         ctx.updateLoggers();
     }
 }

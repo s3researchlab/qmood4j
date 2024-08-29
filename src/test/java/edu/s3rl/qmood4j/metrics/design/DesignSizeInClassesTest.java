@@ -18,7 +18,6 @@ public class DesignSizeInClassesTest {
 
     private double calculate(Path folder) throws IOException {
         
-        Settings.folder = folder;
         
         CodeLoader loader = new CodeLoader(folder, null);
 

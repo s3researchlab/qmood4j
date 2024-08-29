@@ -125,15 +125,6 @@ public class FileUtils {
         }
     }
 
-    public static List<String> readIgnoreFile(Path ignoreFile) {
-
-        if (!Files.exists(ignoreFile)) {
-            return List.of();
-        }
-
-        return readLines(ignoreFile);
-    }
-
     public static void write(Path outputFile, String content) {
 
         checkNotNull(outputFile);
@@ -168,12 +159,22 @@ public class FileUtils {
 
         return getUserFolder().resolve("cache");
     }
-    
+
     public static Path getCacheForPomFilesFolder(String checkSum) {
 
         return FileUtils.getCacheFolder().resolve("pom-files", checkSum);
     }
+
+    public static Path getMetricsOverviewFile() {
+
+        return FileUtils.getUserFolder().resolve("metrics-overview.txt");
+    }
     
+    public static Path getMetricsDetailedFile() {
+
+        return FileUtils.getUserFolder().resolve("metrics-detailed.txt");
+    }
+
     public static String checksum(Path file) {
 
         try {
