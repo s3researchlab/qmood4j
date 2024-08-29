@@ -82,14 +82,6 @@ mvn --version
  - **Interpreted as:** Interpreted as the average across all classes, where a method can exhibit polymorphic behavior if it is overridden by one or more descendent classes
  - **Calculated As:** Average Number
 
-
-### Class Interface Size (CIS)
-
- - **Design Property:** Messaging
- - **Description:** A count of the number of public methods that are available as services to other classes. This is a measure of the services that a class provides.
- - **Interpreted as:** It is a count of the number of public methods in a class, including abstract and static.
- - **Calculated As:** Average across all classes in a design
-
 ### Number of Methods (NOM)
 
  - **Design Property:** Complexity
