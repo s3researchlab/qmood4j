@@ -9,8 +9,6 @@ import picocli.CommandLine.IVersionProvider;
 public class Settings implements IVersionProvider {
 
     public static long startTime = 0L;
-
-    public static String outFolderName = ".qmood4j";
     
     public String[] getVersion() {
 
@@ -41,7 +39,5 @@ public class Settings implements IVersionProvider {
 
         return List.of(".*module-info.java", ".*package-info.java", ".*/target/.*", ".*/test/.*");
     }
-
-    
 
 }

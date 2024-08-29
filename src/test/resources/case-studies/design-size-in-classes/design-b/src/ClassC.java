@@ -1,3 +1,3 @@
 public class ClassC extends ClassB {
-  // Fields and Methods ignored
+    // Fields and Methods ignored
 }

@@ -1,3 +1,3 @@
-public final class ClassA {
+public class ClassB {
     // Fields and Methods ignored
 }

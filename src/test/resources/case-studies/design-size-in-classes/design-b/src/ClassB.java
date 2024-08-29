@@ -1,3 +1,3 @@
-public abstract class ClassA {s
+public abstract class ClassB {
     // Fields and Methods ignored
 }
