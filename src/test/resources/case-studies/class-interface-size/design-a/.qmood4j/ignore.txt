@@ -1,3 +1,0 @@
-.*module-info.java
-.*package-info.java
-.*/target/.*

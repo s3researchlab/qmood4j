@@ -48,5 +48,11 @@ public class ClassInterfaceSizeTest {
         assertEquals(calculate(base.resolve("design-b")), 1.0);
     }
     
+    @Test
+    public void testDesignC() throws IOException {
+                
+        assertEquals(calculate(base.resolve("design-c")), 1.5);
+    }
+    
    
 }
