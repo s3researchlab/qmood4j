@@ -1,0 +1,2 @@
+class_name,abstraction,cohesion,complexity,composition,coupling,design_size,encapsulation,hierarchies,inheritance,messaging,polymorphism,effectiveness,extendibility,flexibility,functionality,reusability,understandability,tqi
+ClassA,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
