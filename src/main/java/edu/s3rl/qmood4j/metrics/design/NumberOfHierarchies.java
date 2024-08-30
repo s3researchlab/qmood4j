@@ -36,8 +36,12 @@ public class NumberOfHierarchies extends Metric {
 
             // Only count if the class has children
             if (!subClassModels.isEmpty()) {
+            	
+            	cm.metrics.put(getName(), 1.0);
+            	
                 total++;
             }
+            
         }
 
         return total;
