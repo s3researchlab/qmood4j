@@ -26,6 +26,10 @@ public class ClassInterfaceSize extends Metric {
 
         for (MethodModel md : cm.getMethodModels()) {
 
+            if (md.isAbstract()) {
+                continue;
+            }
+
             if (md.isPublic()) {
                 total++;
             }

@@ -14,9 +14,9 @@ import edu.s3rl.qmood4j.runner.CodeCalculator;
 import edu.s3rl.qmood4j.runner.CodeLoader;
 import edu.s3rl.qmood4j.runner.CodeParser;
 
-public class ClassInterfaceSizeTest {
+public class DataAccessMetricTest {
 
-    private Path base = Paths.get("src/test/resources/case-studies/class-interface-size");
+    private Path base = Paths.get("src/test/resources/case-studies/data-access-metric");
     
     private double calculate(Path folder) throws IOException {
         
@@ -33,7 +33,7 @@ public class ClassInterfaceSizeTest {
 
         calculator.calculate();
         
-        return parser.getProjectModel().metrics.get(MetricName.MESSAGING);
+        return parser.getProjectModel().metrics.get(MetricName.ENCAPSULATION);
     }
     
     @Test
@@ -45,13 +45,19 @@ public class ClassInterfaceSizeTest {
     @Test
     public void testDesignB() throws IOException {
                 
-        assertEquals(calculate(base.resolve("design-b")), 1.0);
+        assertEquals(calculate(base.resolve("design-b")), 0.0);
     }
     
     @Test
     public void testDesignC() throws IOException {
                 
         assertEquals(calculate(base.resolve("design-c")), 1.0);
+    }
+    
+    @Test
+    public void testDesignD() throws IOException {
+                
+        assertEquals(calculate(base.resolve("design-d")), 0.75);
     }
     
    
