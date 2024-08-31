@@ -7,17 +7,24 @@
                 <ThresholdFilter level="debug" onMatch="DENY" onMismatch="DENY" />
             </Filters>
         </Console>
-        <File name="file-appender" fileName="${sys:user.home}/.qmood4j/app.log">
+        <File name="file-appender-info" fileName="${sys:user.home}/.qmood4j/logs/info.log" append="false">
             <PatternLayout pattern="[%p] %m%n" />
             <Filters>
                 <ThresholdFilter level="all" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+        </File>
+        <File name="file-appender-error" fileName="${sys:user.home}/.qmood4j/logs/error.log" append="false">
+            <PatternLayout pattern="[%p] %m%n" />
+            <Filters>
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
             </Filters>
         </File>
     </Appenders>
     <Loggers>
         <Root level="info">
             <AppenderRef ref="console" />
-            <AppenderRef ref="file-appender" />
+            <AppenderRef ref="file-appender-info" />
+            <AppenderRef ref="file-appender-error" />
         </Root>
     </Loggers>
 </Configuration>
